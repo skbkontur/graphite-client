@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>Graphite.Client</id>
+    <version>0.1.0</version>
+    <title>SKBKontur Graphite Client</title>
+    <projectUrl>https://git.skbkontur.ru/graphite/graphiteclient</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+	  <authors>Evgeny Tikhonov</authors>
+	  <description>GraphiteClient with pooling and ready to use with GroboContainer</description>
+    <copyright>Copyright 2014</copyright>
+  </metadata>
+<files>
+  <file src="Output\Graphite.Client.xml" target="lib\net40\" />
+  <file src="Output\Graphite.Client.dll" target="lib\net40\" />  
+</files>
+</package>

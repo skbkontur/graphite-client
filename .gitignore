@@ -1,0 +1,12 @@
+*.suo
+*.obj
+*.exe
+*.pdb
+*.user
+[Bb]in
+obj
+[Dd]ebug*/
+[Rr]elease*/
+desktop.ini
+_ReSharper*/
+Output/
