@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>Graphite.Client</id>
-    <version>0.1.0</version>
+    <version>0.9.0</version>
     <title>SKBKontur Graphite Client</title>
     <projectUrl>https://git.skbkontur.ru/graphite/graphiteclient</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
