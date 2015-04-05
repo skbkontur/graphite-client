@@ -1,21 +1,31 @@
 ﻿using System;
+using System.Linq;
 
 using Graphite.StatsD;
+
+using JetBrains.Annotations;
 
 using SKBKontur.Graphite.Client.Pooling;
 using SKBKontur.Graphite.Client.Settings;
 
 namespace SKBKontur.Graphite.Client.StatsD
 {
+    [PublicAPI]
     public class PooledStatsDClient : IStatsDClient
     {
-        public PooledStatsDClient(
-            IGraphiteTopology graphiteTopology
-            )
+        public PooledStatsDClient([NotNull] IGraphiteTopology graphiteTopology)
         {
-            pool = graphiteTopology.Enabled
+            pool = (graphiteTopology.Enabled && graphiteTopology.StatsD != null)
                        ? new Pool<StatsDClient>(x => new StatsDClient(graphiteTopology.StatsD.Host, graphiteTopology.StatsD.Port))
                        : null;
+            prefixes = null;
+            innerClient = null;
+        }
+
+        public PooledStatsDClient([NotNull] IStatsDClient innerClient, [CanBeNull] string[] prefixes)
+        {
+            this.innerClient = innerClient;
+            this.prefixes = prefixes;
         }
 
         public void Dispose()
@@ -24,61 +34,58 @@ namespace SKBKontur.Graphite.Client.StatsD
                 pool.Dispose();
         }
 
-        public void Timing(string key, long value, double sampleRate = 1.0)
+        public void Timing(long value, double sampleRate, params string[] keys)
         {
-            Execute(x => x.Timing(key, value, sampleRate));
-        }
-
-        public void Decrement(string key, int magnitude = -1, double sampleRate = 1.0)
-        {
-            Execute(x => x.Decrement(key, magnitude, sampleRate));
-        }
-
-        public void Decrement(params string[] keys)
-        {
-            Execute(x => x.Decrement(keys));
-        }
-
-        public void Decrement(int magnitude, params string[] keys)
-        {
-            Execute(x => x.Decrement(magnitude, keys));
-        }
-
-        public void Decrement(int magnitude, double sampleRate, params string[] keys)
-        {
-            Execute(x => x.Decrement(magnitude, sampleRate, keys));
-        }
-
-        public void Increment(string key, int magnitude = 1, double sampleRate = 1.0)
-        {
-            Execute(x => x.Increment(key, magnitude, sampleRate));
+            if(pool != null)
+                ExecuteAroundPool(x => x.Timing(value, sampleRate, PrependPrefixesTo(keys)));
+            else if (innerClient != null)
+                innerClient.Timing(value, sampleRate, PrependPrefixesTo(keys));
         }
 
         public void Increment(int magnitude, double sampleRate, params string[] keys)
         {
-            Execute(x => x.Increment(magnitude, sampleRate, keys));
+            if(pool != null)
+                ExecuteAroundPool(x => x.Increment(magnitude, sampleRate, PrependPrefixesTo(keys)));
+            else if (innerClient != null)
+                innerClient.Increment(magnitude, sampleRate, PrependPrefixesTo(keys));
         }
 
-        private void Execute(Action<StatsDClient> action)
+        [NotNull]
+        private string[] PrependPrefixesTo([NotNull] string[] keys)
         {
-            if(pool != null)
+            return prefixes == null || prefixes.Length == 0
+                       ? keys
+                       : prefixes.SelectMany(prefix => keys.Select(key => prefix + "." + key)).ToArray();
+        }
+
+        private void ExecuteAroundPool([NotNull] Action<StatsDClient> action)
+        {
+            if(pool == null) 
+                return;
+            StatsDClient plainStatsDClient = null;
+            try
             {
-                var plainStatsDClient = pool.Acquire();
-                try
-                {
-                    action(plainStatsDClient);
-                }
-                catch
+                plainStatsDClient = pool.Acquire();
+                action(plainStatsDClient);
+            }
+            catch
+            {
+                if(plainStatsDClient != null)
                 {
                     pool.Remove(plainStatsDClient);
+                    plainStatsDClient = null;
                 }
-                finally
-                {
+            }
+            finally
+            {
+                if(plainStatsDClient != null)
                     pool.Release(plainStatsDClient);
-                }
             }
         }
 
         private readonly Pool<StatsDClient> pool;
+
+        private readonly IStatsDClient innerClient;
+        private readonly string[] prefixes;
     }
 }

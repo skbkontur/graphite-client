@@ -2,18 +2,21 @@
 
 using Graphite;
 
+using JetBrains.Annotations;
+
 using SKBKontur.Graphite.Client.Pooling;
 using SKBKontur.Graphite.Client.Settings;
 
 namespace SKBKontur.Graphite.Client.Graphite
 {
+    [PublicAPI]
     public class PooledGraphiteClient : IGraphiteClient, IDisposable
     {
         public PooledGraphiteClient(
-            IGraphiteTopology graphiteTopology
+            [NotNull] IGraphiteTopology graphiteTopology
             )
         {
-            if(graphiteTopology.Enabled)
+            if(graphiteTopology.Enabled && graphiteTopology.Graphite != null)
                 InitializePool(graphiteTopology);
         }
 
@@ -25,13 +28,15 @@ namespace SKBKontur.Graphite.Client.Graphite
                 tcpPool.Dispose();
         }
 
-        public void Send(string path, int value, DateTime timestamp)
+        public void Send(string path, long value, DateTime timestamp)
         {
             Execute(x => x.Send(path, value, timestamp));
         }
 
-        private void InitializePool(IGraphiteTopology graphiteTopology)
+        private void InitializePool([NotNull] IGraphiteTopology graphiteTopology)
         {
+            if (graphiteTopology.Graphite == null)
+                throw new ArgumentException("graphiteTopology.Graphite must be not null");
             switch(graphiteTopology.GraphiteProtocol)
             {
             case GraphiteProtocol.Tcp:
@@ -45,38 +50,50 @@ namespace SKBKontur.Graphite.Client.Graphite
             }
         }
 
-        private void Execute(Action<global::Graphite.IGraphiteClient> action)
+        private void Execute([NotNull] Action<global::Graphite.IGraphiteClient> action)
         {
             if(udpPool != null)
             {
-                var connection = udpPool.Acquire();
+                GraphiteUdpClient connection = null;
                 try
                 {
+                    connection = udpPool.Acquire();
                     action(connection);
                 }
                 catch
                 {
-                    udpPool.Remove(connection);
+                    if(connection != null)
+                    {
+                        udpPool.Remove(connection);
+                        connection = null;
+                    }
                 }
                 finally
                 {
-                    udpPool.Release(connection);
+                    if(connection != null)
+                        udpPool.Release(connection);
                 }
             }
             else if(tcpPool != null)
             {
-                var connection = tcpPool.Acquire();
+                GraphiteTcpClient connection = null;
                 try
                 {
+                    connection = tcpPool.Acquire();
                     action(connection);
                 }
                 catch
                 {
-                    tcpPool.Remove(connection);
+                    if(connection != null)
+                    {
+                        tcpPool.Remove(connection);
+                        connection = null;
+                    }
                 }
                 finally
                 {
-                    tcpPool.Release(connection);
+                    if(connection != null)
+                        tcpPool.Release(connection);
                 }
             }
         }
