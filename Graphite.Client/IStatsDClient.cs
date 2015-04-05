@@ -1,15 +1,31 @@
 ﻿using System;
 
+using JetBrains.Annotations;
+
 namespace SKBKontur.Graphite.Client
 {
+    /// <summary>
+    ///     Интерфейс, позволяющий отправлять точки в StatsD backend
+    /// </summary>
+    [PublicAPI]
     public interface IStatsDClient : IDisposable
     {
-        void Timing(string key, long value, double sampleRate = 1.0);
-        void Decrement(string key, int magnitude = -1, double sampleRate = 1.0);
-        void Decrement(params string[] keys);
-        void Decrement(int magnitude, params string[] keys);
-        void Decrement(int magnitude, double sampleRate, params string[] keys);
-        void Increment(string key, int magnitude = 1, double sampleRate = 1.0);
-        void Increment(int magnitude, double sampleRate, params string[] keys);
+        /// <summary>
+        ///     Метод для отправки таймингов в StatsD.
+        ///     Отправляет сообщение key:value|ms
+        /// </summary>
+        /// <param name="value">Значение метрики</param>
+        /// <param name="sampleRate">Вероятность отправки значения по сети</param>
+        /// <param name="keys">Ключи, по которым будет учитывается метрика</param>
+        void Timing(long value, double sampleRate, [NotNull] params string[] keys);
+
+        /// <summary>
+        ///     Метод для отправки счётчиков в StatsD.
+        ///     Отправляет сообщения вида key:value|c
+        /// </summary>
+        /// <param name="magnitude">Значение инкремента для счётчикка. Может быть отричательным</param>
+        /// <param name="sampleRate">Вероятность отправки значения по сети</param>
+        /// <param name="keys">Ключи, по которым будет учитывается метрика</param>
+        void Increment(int magnitude, double sampleRate, [NotNull] params string[] keys);
     }
 }

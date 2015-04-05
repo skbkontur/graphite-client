@@ -1,11 +1,13 @@
 ﻿using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 
+using JetBrains.Annotations;
+
 namespace SKBKontur.Graphite.Client.Pooling.Utils
 {
     internal class ObjectReferenceEqualityComparer<T> : EqualityComparer<T> where T : class
     {
-        public override bool Equals(T x, T y)
+        public override bool Equals([CanBeNull] T x, [CanBeNull] T y)
         {
             return ReferenceEquals(x, y);
         }
@@ -15,7 +17,9 @@ namespace SKBKontur.Graphite.Client.Pooling.Utils
             return RuntimeHelpers.GetHashCode(obj);
         }
 
-        public new static IEqualityComparer<T> Default { get { return defaultComparer ?? (defaultComparer = new ObjectReferenceEqualityComparer<T>()); } }
-        private static IEqualityComparer<T> defaultComparer;
+        [NotNull]
+        public new static IEqualityComparer<T> Default { get { return defaultComparer; } }
+
+        private static readonly IEqualityComparer<T> defaultComparer = new ObjectReferenceEqualityComparer<T>();
     }
 }

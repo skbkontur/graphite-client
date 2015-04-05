@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 
+using JetBrains.Annotations;
+
 using SKBKontur.Graphite.Client.Pooling.Exceptions;
 using SKBKontur.Graphite.Client.Pooling.Utils;
 
@@ -11,7 +13,7 @@ namespace SKBKontur.Graphite.Client.Pooling
 {
     internal class Pool<T> : IDisposable where T : class, IDisposable
     {
-        public Pool(Func<Pool<T>, T> itemFactory, Predicate<T> livenessCheckFunc = null)
+        public Pool([NotNull] Func<Pool<T>, T> itemFactory, [CanBeNull] Predicate<T> livenessCheckFunc = null)
         {
             this.itemFactory = itemFactory;
             this.livenessCheckFunc = livenessCheckFunc;
@@ -24,13 +26,14 @@ namespace SKBKontur.Graphite.Client.Pooling
                 item.Dispose();
         }
 
+        [NotNull]
         public T Acquire()
         {
             T result;
             return TryAcquireExists(out result) ? result : AcquireNew();
         }
 
-        public void Release(T item)
+        public void Release([NotNull] T item)
         {
             object dummy;
             if(!busyItems.TryRemove(item, out dummy))
@@ -71,7 +74,7 @@ namespace SKBKontur.Graphite.Client.Pooling
             }
         }
 
-        public void Remove(T item)
+        public void Remove([NotNull] T item)
         {
             object dummy;
             if(!busyItems.TryRemove(item, out dummy))
@@ -100,6 +103,7 @@ namespace SKBKontur.Graphite.Client.Pooling
             return false;
         }
 
+        [NotNull]
         private T AcquireNew()
         {
             var result = itemFactory(this);
@@ -107,7 +111,7 @@ namespace SKBKontur.Graphite.Client.Pooling
             return result;
         }
 
-        private bool IsAlive(T result)
+        private bool IsAlive([NotNull] T result)
         {
             return livenessCheckFunc == null || livenessCheckFunc(result);
         }
@@ -129,7 +133,7 @@ namespace SKBKontur.Graphite.Client.Pooling
             return result;
         }
 
-        private void MarkItemAsBusy(T result)
+        private void MarkItemAsBusy([NotNull] T result)
         {
             if(!busyItems.TryAdd(result, new object()))
                 throw new ItemInPoolCollisionException();
@@ -147,12 +151,13 @@ namespace SKBKontur.Graphite.Client.Pooling
 
         private class FreeItemInfo
         {
-            public FreeItemInfo(T item, DateTime idleTime)
+            public FreeItemInfo([NotNull] T item, DateTime idleTime)
             {
                 Item = item;
                 IdleTime = idleTime;
             }
 
+            [NotNull]
             public T Item { get; private set; }
             public DateTime IdleTime { get; private set; }
         }

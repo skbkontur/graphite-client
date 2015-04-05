@@ -8,7 +8,7 @@
   <Target Name="Publish">
     <MakeDir Directories="Output" />
     <MSBuild Projects="GraphiteClient.sln" Targets="Rebuild" Properties="Configuration=$(Configuration)" />
-    <Exec Command="References\ILMerge\ILMerge.exe /xmldocs /v4 /internalize /out:Output\Graphite.Client.dll Graphite.Client\bin\$(Configuration)\Graphite.Client.dll Graphite.Client\bin\$(Configuration)\Graphite.dll" />
+    <Exec Command="References\ILMerge\ILMerge.exe /xmldocs /v4 /internalize /out:Output\SKBKontur.Graphite.Client.dll Graphite.Client\bin\$(Configuration)\SKBKontur.Graphite.Client.dll Graphite.Client\bin\$(Configuration)\Graphite.dll" />
   </Target>
   
 </Project>
