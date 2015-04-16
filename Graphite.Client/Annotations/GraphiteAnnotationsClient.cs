@@ -20,21 +20,46 @@ namespace SKBKontur.Graphite.Client.Annotations
 
         public void PostEvent(string title, string[] tags)
         {
-            if(!graphiteTopology.Enabled || graphiteTopology.AnnotationsUrl == null) 
+            if(!graphiteTopology.Enabled || graphiteTopology.AnnotationsUrl == null)
                 return;
             if(string.IsNullOrWhiteSpace(title))
                 throw new ArgumentNullException("title", "Title must be filled");
 
-            var request = (HttpWebRequest)WebRequest.Create(graphiteTopology.AnnotationsUrl);
-            request.Method = "POST";
-            request.ContentType = "application/json";
-            request.KeepAlive = false;
-            var body = CreateBody(title, tags ?? new string[0]);
-            request.ContentLength = body.Length;
-            using(var requestStream = request.GetRequestStream())
-                requestStream.Write(body, 0, body.Length);
-            var response = request.GetResponse();
-            response.Close();
+            try
+            {
+                var request = (HttpWebRequest)WebRequest.Create(graphiteTopology.AnnotationsUrl);
+                request.Method = "POST";
+                request.ContentType = "application/json";
+                request.KeepAlive = false;
+                var body = CreateBody(title, tags ?? new string[0]);
+                request.ContentLength = body.Length;
+                request.BeginGetRequestStream(requestStreamResult =>
+                    {
+                        try
+                        {
+                            var requestStream = request.EndGetRequestStream(requestStreamResult);
+                            requestStream.Write(body, 0, body.Length);
+                            requestStream.Close();
+                            request.BeginGetResponse(getResponseResult =>
+                                {
+                                    try
+                                    {
+                                        var response = request.EndGetResponse(getResponseResult);
+                                        response.Close();
+                                    }
+                                    catch
+                                    {
+                                    }
+                                }, null);
+                        }
+                        catch
+                        {
+                        }
+                    }, null);
+            }
+            catch
+            {
+            }
         }
 
         [NotNull]
