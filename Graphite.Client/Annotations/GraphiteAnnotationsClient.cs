@@ -94,7 +94,7 @@ namespace SKBKontur.Graphite.Client.Annotations
         [NotNull]
         private byte[] CreateBody([NotNull] string title, [CanBeNull] string[] tags)
         {
-            return Encoding.UTF8.GetBytes(string.Format(@"{{""what"":""{0}"",""tags"":""{1}""}}", EscapeStringValue(title), EscapeStringValue(string.Join(",", tags ?? new string[0]))));
+            return Encoding.UTF8.GetBytes(string.Format(@"{{""desc"":""{0}"",""tags"":""{1}""}}", EscapeStringValue(title), EscapeStringValue(string.Join(",", tags ?? new string[0]))));
         }
 
         private readonly IGraphiteTopology graphiteTopology;
