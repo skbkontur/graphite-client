@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Net;
+using System.Net.Http;
 using System.Text;
 
 using JetBrains.Annotations;
@@ -34,45 +34,17 @@ namespace SKBKontur.Graphite.Client.Annotations
 
         public void PostEvent(string title, string[] tags, long utcTimestamp)
         {
-            if (!graphiteTopology.Enabled || graphiteTopology.AnnotationsUrl == null)
+            if(!graphiteTopology.Enabled || graphiteTopology.AnnotationsUrl == null)
                 return;
-            if (string.IsNullOrWhiteSpace(title))
+            if(string.IsNullOrWhiteSpace(title))
                 throw new ArgumentNullException("title", "Title must be filled");
 
-            try
+            var annotationBody = CreateBody(title, tags ?? new string[0], utcTimestamp);
+            using (var client = new HttpClient())
             {
-                var request = (HttpWebRequest)WebRequest.Create(graphiteTopology.AnnotationsUrl);
-                request.Method = "POST";
-                request.ContentType = "application/json";
-                request.KeepAlive = false;
-                var body = CreateBody(title, tags ?? new string[0], utcTimestamp);
-                request.ContentLength = body.Length;
-                request.BeginGetRequestStream(requestStreamResult =>
-                {
-                    try
-                    {
-                        var requestStream = request.EndGetRequestStream(requestStreamResult);
-                        requestStream.Write(body, 0, body.Length);
-                        requestStream.Close();
-                        request.BeginGetResponse(getResponseResult =>
-                        {
-                            try
-                            {
-                                var response = request.EndGetResponse(getResponseResult);
-                                response.Close();
-                            }
-                            catch
-                            {
-                            }
-                        }, null);
-                    }
-                    catch
-                    {
-                    }
-                }, null);
-            }
-            catch
-            {
+                var httpContent = new StringContent(annotationBody, Encoding.UTF8, "application/json");
+                var response = client.PostAsync(graphiteTopology.AnnotationsUrl, httpContent);
+                var responseString = response.Result.Content.ReadAsStringAsync();
             }
         }
 
@@ -113,7 +85,7 @@ namespace SKBKontur.Graphite.Client.Annotations
         }
 
         [NotNull]
-        private byte[] CreateBody([NotNull] string title, [CanBeNull] string[] tags, long utcTimestamp)
+        private string CreateBody([NotNull] string title, [CanBeNull] string[] tags, long utcTimestamp)
         {
             var descriptionDict = new Dictionary<string, object>
             {
@@ -122,7 +94,7 @@ namespace SKBKontur.Graphite.Client.Annotations
                 {"tags",  string.Join(",", tags ?? new string[0])}
             };
             var descriptionJson = JsonConvert.SerializeObject(descriptionDict);
-            return Encoding.UTF8.GetBytes(descriptionJson);
+            return descriptionJson;
         }
 
         private readonly IGraphiteTopology graphiteTopology;
