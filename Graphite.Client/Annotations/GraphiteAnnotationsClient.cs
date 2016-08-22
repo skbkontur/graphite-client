@@ -12,7 +12,7 @@ using SKBKontur.Graphite.Client.Settings;
 namespace SKBKontur.Graphite.Client.Annotations
 {
     [PublicAPI]
-    public class GraphiteAnnotationsClient : IGraphiteAnnotationsClient
+    public class GraphiteAnnotationsClient : IGraphiteAnnotationsClient, IGraphiteAnnotationsClientDateTime, IGraphiteAnnotationsClientTimestamp
     {
         public GraphiteAnnotationsClient(
             [NotNull] IGraphiteTopology graphiteTopology
@@ -23,9 +23,20 @@ namespace SKBKontur.Graphite.Client.Annotations
 
         public void PostEvent(string title, string[] tags)
         {
-            if(!graphiteTopology.Enabled || graphiteTopology.AnnotationsUrl == null)
+            PostEvent(title, tags, DateTime.UtcNow);
+        }
+
+        public void PostEvent(string title, string[] tags, DateTime utcDateTime)
+        {
+            var utcTimestamp = GetEpochTime(utcDateTime);
+            PostEvent(title, tags, utcTimestamp);
+        }
+
+        public void PostEvent(string title, string[] tags, long utcTimestamp)
+        {
+            if (!graphiteTopology.Enabled || graphiteTopology.AnnotationsUrl == null)
                 return;
-            if(string.IsNullOrWhiteSpace(title))
+            if (string.IsNullOrWhiteSpace(title))
                 throw new ArgumentNullException("title", "Title must be filled");
 
             try
@@ -34,31 +45,31 @@ namespace SKBKontur.Graphite.Client.Annotations
                 request.Method = "POST";
                 request.ContentType = "application/json";
                 request.KeepAlive = false;
-                var body = CreateBody(title, tags ?? new string[0]);
+                var body = CreateBody(title, tags ?? new string[0], utcTimestamp);
                 request.ContentLength = body.Length;
                 request.BeginGetRequestStream(requestStreamResult =>
+                {
+                    try
                     {
-                        try
+                        var requestStream = request.EndGetRequestStream(requestStreamResult);
+                        requestStream.Write(body, 0, body.Length);
+                        requestStream.Close();
+                        request.BeginGetResponse(getResponseResult =>
                         {
-                            var requestStream = request.EndGetRequestStream(requestStreamResult);
-                            requestStream.Write(body, 0, body.Length);
-                            requestStream.Close();
-                            request.BeginGetResponse(getResponseResult =>
-                                {
-                                    try
-                                    {
-                                        var response = request.EndGetResponse(getResponseResult);
-                                        response.Close();
-                                    }
-                                    catch
-                                    {
-                                    }
-                                }, null);
-                        }
-                        catch
-                        {
-                        }
-                    }, null);
+                            try
+                            {
+                                var response = request.EndGetResponse(getResponseResult);
+                                response.Close();
+                            }
+                            catch
+                            {
+                            }
+                        }, null);
+                    }
+                    catch
+                    {
+                    }
+                }, null);
             }
             catch
             {
@@ -112,19 +123,6 @@ namespace SKBKontur.Graphite.Client.Annotations
             };
             var descriptionJson = JsonConvert.SerializeObject(descriptionDict);
             return Encoding.UTF8.GetBytes(descriptionJson);
-        }
-
-        [NotNull]
-        private byte[] CreateBody([NotNull] string title, [CanBeNull] string[] tags, DateTime utcDateTime)
-        {
-            var utcTimestamp = GetEpochTime(utcDateTime);
-            return CreateBody(title, tags, utcTimestamp);
-        }
-
-        [NotNull]
-        private byte[] CreateBody([NotNull] string title, [CanBeNull] string[] tags)
-        {
-            return CreateBody(title, tags, DateTime.UtcNow);
         }
 
         private readonly IGraphiteTopology graphiteTopology;
