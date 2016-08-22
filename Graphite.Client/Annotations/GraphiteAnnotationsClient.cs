@@ -1,8 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Net;
 using System.Text;
 
 using JetBrains.Annotations;
+
+using Newtonsoft.Json;
 
 using SKBKontur.Graphite.Client.Settings;
 
@@ -91,10 +94,37 @@ namespace SKBKontur.Graphite.Client.Annotations
             return output.ToString();
         }
 
+        private static long GetEpochTime(DateTime dateTime)
+        {
+            var t = dateTime - new DateTime(1970, 1, 1);
+            var timestamp = (long)t.TotalMilliseconds;
+            return timestamp;
+        }
+
+        [NotNull]
+        private byte[] CreateBody([NotNull] string title, [CanBeNull] string[] tags, long utcTimestamp)
+        {
+            var descriptionDict = new Dictionary<string, object>
+            {
+                {"@timestamp", utcTimestamp},
+                {"desc", title},
+                {"tags",  string.Join(",", tags ?? new string[0])}
+            };
+            var descriptionJson = JsonConvert.SerializeObject(descriptionDict);
+            return Encoding.UTF8.GetBytes(descriptionJson);
+        }
+
+        [NotNull]
+        private byte[] CreateBody([NotNull] string title, [CanBeNull] string[] tags, DateTime utcDateTime)
+        {
+            var utcTimestamp = GetEpochTime(utcDateTime);
+            return CreateBody(title, tags, utcTimestamp);
+        }
+
         [NotNull]
         private byte[] CreateBody([NotNull] string title, [CanBeNull] string[] tags)
         {
-            return Encoding.UTF8.GetBytes(string.Format(@"{{""desc"":""{0}"",""tags"":""{1}""}}", EscapeStringValue(title), EscapeStringValue(string.Join(",", tags ?? new string[0]))));
+            return CreateBody(title, tags, DateTime.UtcNow);
         }
 
         private readonly IGraphiteTopology graphiteTopology;
