@@ -8,37 +8,7 @@ namespace SKBKontur.Graphite.Client
     ///     Интерфейс, позволяющий отправлять аннотации
     /// </summary>
     [PublicAPI]
-    public interface IGraphiteAnnotationsClientTimestamp
-    {
-        /// <summary>
-        ///     Отправка аннотации
-        /// </summary>
-        /// <param name="title">Заголовок аннотации</param>
-        /// <param name="tags">Тэги аннотации</param>
-        /// <param name="utcTimestamp">Время по UTC в формате Epoch time</param>
-        void PostEvent([NotNull] string title, [CanBeNull] string[] tags, long utcTimestamp);
-    }
-
-    /// <summary>
-    ///     Интерфейс, позволяющий отправлять аннотации
-    /// </summary>
-    [PublicAPI]
-    public interface IGraphiteAnnotationsClientDateTime
-    {
-        /// <summary>
-        ///     Отправка аннотации
-        /// </summary>
-        /// <param name="title">Заголовок аннотации</param>
-        /// <param name="tags">Тэги аннотации</param>
-        /// <param name="utcDateTime">Время по UTC</param>
-        void PostEvent([NotNull] string title, [CanBeNull] string[] tags, DateTime utcDateTime);
-    }
-
-    /// <summary>
-    ///     Интерфейс, позволяющий отправлять аннотации
-    /// </summary>
-    [PublicAPI]
-    public interface IGraphiteAnnotationsClient : IGraphiteAnnotationsClientTimestamp, IGraphiteAnnotationsClientDateTime
+    public interface IGraphiteAnnotationsClient
     {
         /// <summary>
         ///     Отправка аннотации
@@ -46,5 +16,22 @@ namespace SKBKontur.Graphite.Client
         /// <param name="title">Заголовок аннотации</param>
         /// <param name="tags">Тэги аннотации</param>
         void PostEvent([NotNull] string title, [CanBeNull] string[] tags);
+
+        /// <summary>
+        ///     Отправка аннотации
+        /// </summary>
+        /// <param name="title">Заголовок аннотации</param>
+        /// <param name="tags">Тэги аннотации</param>
+        /// <param name="utcTimestamp">Время по UTC в формате Epoch time</param>
+        void PostEvent([NotNull] string title, [CanBeNull] string[] tags, long utcTimestamp);
+
+        /// <summary>
+        ///     Отправка аннотации
+        /// </summary>
+        /// <param name="title">Заголовок аннотации</param>
+        /// <param name="tags">Тэги аннотации</param>
+        /// <param name="utcDateTime">Время по UTC</param>
+        void PostEvent([NotNull] string title, [CanBeNull] string[] tags, DateTime utcDateTime);
+
     }
 }

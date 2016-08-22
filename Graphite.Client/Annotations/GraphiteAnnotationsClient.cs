@@ -12,7 +12,7 @@ using SKBKontur.Graphite.Client.Settings;
 namespace SKBKontur.Graphite.Client.Annotations
 {
     [PublicAPI]
-    public class GraphiteAnnotationsClient : IGraphiteAnnotationsClient, IGraphiteAnnotationsClientDateTime, IGraphiteAnnotationsClientTimestamp
+    public class GraphiteAnnotationsClient : IGraphiteAnnotationsClient
     {
         public GraphiteAnnotationsClient(
             [NotNull] IGraphiteTopology graphiteTopology
