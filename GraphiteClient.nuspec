@@ -2,13 +2,16 @@
 <package >
   <metadata>
     <id>Graphite.Client</id>
-    <version>1.0.6</version>
+    <version>1.1.0</version>
     <title>SKBKontur Graphite Client</title>
     <projectUrl>https://git.skbkontur.ru/graphite/graphiteclient</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
 	  <authors>Eugeny Tikhonov</authors>
 	  <description>GraphiteClient with pooling and ready to use with GroboContainer</description>
     <copyright>Copyright 2014-2015</copyright>
+	<dependencies>
+      <dependency id="Newtonsoft.Json" version="9.0.1" />
+    </dependencies>
   </metadata>
 <files>
   <file src="Output\SKBKontur.Graphite.Client.xml" target="lib\net40\" />
