@@ -21,31 +21,33 @@ namespace SKBKontur.Graphite.Client.Annotations
             this.graphiteTopology = graphiteTopology;
         }
 
-        public void PostEvent(string title, string[] tags)
+        public HttpResponseMessage PostEvent(string title, string[] tags)
         {
-            PostEvent(title, tags, DateTime.UtcNow);
+            return PostEvent(title, tags, DateTime.UtcNow);
         }
 
-        public void PostEvent(string title, string[] tags, DateTime utcDateTime)
+        public HttpResponseMessage PostEvent(string title, string[] tags, DateTime utcDateTime)
         {
             var utcTimestamp = GetEpochTime(utcDateTime);
-            PostEvent(title, tags, utcTimestamp);
+            return PostEvent(title, tags, utcTimestamp);
         }
 
-        public void PostEvent(string title, string[] tags, long utcTimestamp)
+        public HttpResponseMessage PostEvent(string title, string[] tags, long utcTimestamp)
         {
             if(!graphiteTopology.Enabled || graphiteTopology.AnnotationsUrl == null)
-                return;
+                return null;
             if(string.IsNullOrWhiteSpace(title))
                 throw new ArgumentNullException("title", "Title must be filled");
 
             var annotationBody = CreateBody(title, tags ?? new string[0], utcTimestamp);
+            HttpResponseMessage result;
             using (var client = new HttpClient())
             {
                 var httpContent = new StringContent(annotationBody, Encoding.UTF8, "application/json");
                 var response = client.PostAsync(graphiteTopology.AnnotationsUrl, httpContent);
-                var responseString = response.Result.Content.ReadAsStringAsync();
+                result = response.Result;
             }
+            return result;
         }
 
         [NotNull]

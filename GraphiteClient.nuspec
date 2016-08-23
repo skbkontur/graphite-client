@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>Graphite.Client</id>
-    <version>1.0.6</version>
+    <version>1.1.0</version>
     <title>SKBKontur Graphite Client</title>
     <projectUrl>https://git.skbkontur.ru/graphite/graphiteclient</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
@@ -15,4 +15,7 @@
   <file src="Output\SKBKontur.Graphite.Client.pdb" target="lib\net40\" />
   <file src="Output\SKBKontur.Graphite.Client.dll" target="lib\net40\" />  
 </files>
+<dependencies>
+  <dependency id="Newtonsoft.Json" version="9.0.1" />
+</dependencies>
 </package>
