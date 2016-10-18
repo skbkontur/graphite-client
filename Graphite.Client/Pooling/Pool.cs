@@ -44,6 +44,21 @@ namespace SKBKontur.Graphite.Client.Pooling
             freeItems.Push(new FreeItemInfo(item, DateTime.UtcNow));
         }
 
+        public void DisableFor(TimeSpan penalty)
+        {
+            disablingLock.EnterWriteLock();
+            disabledTo = DateTime.UtcNow.Add(penalty);
+            disablingLock.ExitWriteLock();
+        }
+
+        public bool IsDisabled()
+        {
+            disablingLock.EnterReadLock();
+            var disabled = disabledTo > DateTime.UtcNow;
+            disablingLock.ExitReadLock();
+            return disabled;
+        }
+
         public int RemoveIdleItems(TimeSpan minIdleTimeSpan)
         {
             unusedItemCollectorLock.EnterWriteLock();
@@ -144,10 +159,12 @@ namespace SKBKontur.Graphite.Client.Pooling
 
         private volatile int busyItemCount;
         private readonly ReaderWriterLockSlim unusedItemCollectorLock = new ReaderWriterLockSlim();
+        private readonly ReaderWriterLockSlim disablingLock = new ReaderWriterLockSlim();
         private readonly Func<Pool<T>, T> itemFactory;
         private readonly Predicate<T> livenessCheckFunc;
         private readonly ConcurrentStack<FreeItemInfo> freeItems = new ConcurrentStack<FreeItemInfo>();
         private readonly ConcurrentDictionary<T, object> busyItems = new ConcurrentDictionary<T, object>(ObjectReferenceEqualityComparer<T>.Default);
+        private DateTime disabledTo;
 
         private class FreeItemInfo
         {

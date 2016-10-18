@@ -60,7 +60,7 @@ namespace SKBKontur.Graphite.Client.StatsD
 
         private void ExecuteAroundPool([NotNull] Action<StatsDClient> action)
         {
-            if(pool == null) 
+            if(pool == null || pool.IsDisabled()) 
                 return;
             StatsDClient plainStatsDClient = null;
             try
@@ -70,6 +70,7 @@ namespace SKBKontur.Graphite.Client.StatsD
             }
             catch
             {
+                pool.DisableFor(TimeSpan.FromMinutes(5));
                 if(plainStatsDClient != null)
                 {
                     pool.Remove(plainStatsDClient);
