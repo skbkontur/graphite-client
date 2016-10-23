@@ -8,7 +8,7 @@ namespace SKBKontur.Graphite.Client.Pooling.Utils
     {
         private readonly TimeSpan cacheDuration;
         private DateTime lastResolveTime;
-        private IPAddress lastResolveResult;
+        private string lastResolveResult;
         private string lastResolvedHostname;
         public bool LastResultFromCache { get; private set; }
 
@@ -17,7 +17,7 @@ namespace SKBKontur.Graphite.Client.Pooling.Utils
             this.cacheDuration = cacheDuration;
         }
 
-        public IPAddress Resolve(string hostname)
+        public string Resolve(string hostname)
         {
             if (CacheIsValid(hostname))
             {
@@ -32,10 +32,10 @@ namespace SKBKontur.Graphite.Client.Pooling.Utils
 
             try
             {
-                var ipAddresses = Dns.GetHostAddresses(hostname);
-                lastResolveResult = ipAddresses.FirstOrDefault();
+                var ipAddresses = Dns.GetHostAddresses(hostname).FirstOrDefault();
+                lastResolveResult = ipAddresses == null ? null : ipAddresses.ToString();
             }
-            catch (Exception)
+            catch
             {
                 lastResolveResult = null;
             }
