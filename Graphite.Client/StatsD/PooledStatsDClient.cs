@@ -6,6 +6,7 @@ using Graphite.StatsD;
 using JetBrains.Annotations;
 
 using SKBKontur.Graphite.Client.Pooling;
+using SKBKontur.Graphite.Client.Pooling.Utils;
 using SKBKontur.Graphite.Client.Settings;
 
 namespace SKBKontur.Graphite.Client.StatsD
@@ -15,8 +16,9 @@ namespace SKBKontur.Graphite.Client.StatsD
     {
         public PooledStatsDClient([NotNull] IGraphiteTopology graphiteTopology)
         {
+            hostnameResolver = new HostnameResolverWithCache(TimeSpan.FromHours(1));
             pool = (graphiteTopology.Enabled && graphiteTopology.StatsD != null)
-                       ? new Pool<StatsDClient>(x => new StatsDClient(graphiteTopology.StatsD.Host, graphiteTopology.StatsD.Port))
+                       ? new Pool<StatsDClient>(x => new StatsDClient(hostnameResolver.Resolve(graphiteTopology.StatsD.Host), graphiteTopology.StatsD.Port))
                        : null;
             prefixes = null;
             innerClient = null;
@@ -84,6 +86,7 @@ namespace SKBKontur.Graphite.Client.StatsD
         }
 
         private readonly Pool<StatsDClient> pool;
+        private readonly HostnameResolverWithCache hostnameResolver;
 
         private readonly IStatsDClient innerClient;
         private readonly string[] prefixes;
