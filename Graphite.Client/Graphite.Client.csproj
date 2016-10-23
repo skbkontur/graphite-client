@@ -50,6 +50,7 @@
     <Compile Include="IGraphiteAnnotationsClient.cs" />
     <Compile Include="Pooling\Exceptions\FailedReleaseItemException.cs" />
     <Compile Include="Pooling\Exceptions\ItemInPoolCollisionException.cs" />
+    <Compile Include="Pooling\Utils\HostnameResolverWithCache.cs" />
     <Compile Include="Pooling\Utils\ObjectReferenceEqualityComparer.cs" />
     <Compile Include="Pooling\Pool.cs" />
     <Compile Include="Pooling\Exceptions\RemoveFromPoolFailedException.cs" />
