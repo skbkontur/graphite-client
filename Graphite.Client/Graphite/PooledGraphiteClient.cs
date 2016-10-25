@@ -5,6 +5,7 @@ using Graphite;
 using JetBrains.Annotations;
 
 using SKBKontur.Graphite.Client.Pooling;
+using SKBKontur.Graphite.Client.Pooling.Utils;
 using SKBKontur.Graphite.Client.Settings;
 
 namespace SKBKontur.Graphite.Client.Graphite
@@ -37,13 +38,14 @@ namespace SKBKontur.Graphite.Client.Graphite
         {
             if (graphiteTopology.Graphite == null)
                 throw new ArgumentException("graphiteTopology.Graphite must be not null");
+            hostnameResolver = new HostnameResolverWithCache(TimeSpan.FromHours(1));
             switch(graphiteTopology.GraphiteProtocol)
             {
             case GraphiteProtocol.Tcp:
-                tcpPool = new Pool<GraphiteTcpClient>(x => new GraphiteTcpClient(graphiteTopology.Graphite.Host, graphiteTopology.Graphite.Port));
+                tcpPool = new Pool<GraphiteTcpClient>(x => new GraphiteTcpClient(hostnameResolver.Resolve(graphiteTopology.Graphite.Host), graphiteTopology.Graphite.Port));
                 break;
             case GraphiteProtocol.Udp:
-                udpPool = new Pool<GraphiteUdpClient>(x => new GraphiteUdpClient(graphiteTopology.Graphite.Host, graphiteTopology.Graphite.Port));
+                udpPool = new Pool<GraphiteUdpClient>(x => new GraphiteUdpClient(hostnameResolver.Resolve(graphiteTopology.Graphite.Host), graphiteTopology.Graphite.Port));
                 break;
             default:
                 throw new Exception(string.Format("Unknown graphite protocol: {0}", graphiteTopology.GraphiteProtocol));
@@ -100,5 +102,6 @@ namespace SKBKontur.Graphite.Client.Graphite
 
         private Pool<GraphiteUdpClient> udpPool;
         private Pool<GraphiteTcpClient> tcpPool;
+        private HostnameResolverWithCache hostnameResolver;
     }
 }
