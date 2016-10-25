@@ -32,8 +32,8 @@ namespace SKBKontur.Graphite.Client.Pooling.Utils
 
             try
             {
-                var ipAddresses = Dns.GetHostAddresses(hostname).FirstOrDefault();
-                lastResolveResult = ipAddresses == null ? null : ipAddresses.ToString();
+                var ipAddress = Dns.GetHostAddresses(hostname).FirstOrDefault();
+                lastResolveResult = ipAddress == null ? null : ipAddress.ToString();
             }
             catch
             {

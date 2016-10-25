@@ -13,20 +13,13 @@ namespace Graphite.Client.Tests
         [TestCase("", true)]
         [TestCase("non-exists", true)]
         [TestCase("graphite-test", false)]
-        public void TestInitialResolve(string hostname, bool shouldEmptyResult)
+        public void Resolve_ReturnsNotNullOnlyOnSuccess(string hostname, bool shouldEmptyResult)
         {
             var sut = new HostnameResolverWithCache(TimeSpan.FromMinutes(1));
             var ipAddress = sut.Resolve(hostname);
 
             Assert.IsFalse(sut.LastResultFromCache);
-            if(shouldEmptyResult)
-            {
-                Assert.IsNull(ipAddress);
-            }
-            else
-            {
-                Assert.IsNotNull(ipAddress);
-            }
+            Assert.AreEqual(ipAddress == null, shouldEmptyResult);
         }
 
         [TestCase(null)]
