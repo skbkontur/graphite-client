@@ -4,7 +4,7 @@ using SKBKontur.Graphite.Client.Settings;
 
 namespace Graphite.Client.Tests
 {
-    public class TestGraphiteTopology : IGraphiteTopology
+    internal class TestGraphiteTopology : IGraphiteTopology
     {
         public bool Enabled { get; set; }
         public DnsEndPoint StatsD { get; set; }

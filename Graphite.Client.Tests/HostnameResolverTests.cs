@@ -9,69 +9,73 @@ namespace Graphite.Client.Tests
 {
     public class HostnameResolverTests
     {
+        private TestDnsResolver testDnsResolver;
+
+        [SetUp]
+        public void SetUp()
+        {
+            testDnsResolver = new TestDnsResolver();
+        }
+
         [TestCase(null, true)]
         [TestCase("", true)]
-        [TestCase("non-exists", true)]
-        [TestCase("graphite-test", false)]
+        [TestCase("notFound", true)]
+        [TestCase("correct", false)]
         public void Resolve_ReturnsNotNullOnlyOnSuccess(string hostname, bool shouldEmptyResult)
         {
-            var sut = new HostnameResolverWithCache(TimeSpan.FromMinutes(1));
+            testDnsResolver = new TestDnsResolver("correct");
+            var sut = new HostnameResolverWithCache(TimeSpan.FromMinutes(1), testDnsResolver);
             var ipAddress = sut.Resolve(hostname);
-
-            Assert.IsFalse(sut.LastResultFromCache);
             Assert.AreEqual(ipAddress == null, shouldEmptyResult);
         }
 
-        [TestCase(null)]
-        [TestCase("")]
-        [TestCase("non-exists")]
-        [TestCase("graphite-test")]
-        public void Resolve_SecondResolveSameHostname_UseCache(string hostname)
+        [TestCase(null, 0)]
+        [TestCase("", 0)]
+        [TestCase("notEmpty", 1)]
+        public void Resolve_UseResolverOnlyHostanameNotEmpty(string hostname, int expectedCallCount)
         {
-            var sut = new HostnameResolverWithCache(TimeSpan.FromMinutes(1));
+            var sut = new HostnameResolverWithCache(TimeSpan.FromMinutes(1), testDnsResolver);
             sut.Resolve(hostname);
-            Assert.IsFalse(sut.LastResultFromCache);
-            sut.Resolve(hostname);
-            Assert.IsTrue(sut.LastResultFromCache);
+            Assert.That(testDnsResolver.CallCount, Is.EqualTo(expectedCallCount));
+        }
+        
+        [Test]
+        public void Resolve_SecondResolveSameHostname_UseCache()
+        {
+            var sut = new HostnameResolverWithCache(TimeSpan.FromMinutes(1), testDnsResolver);
+            sut.Resolve("hostname");
+            sut.Resolve("hostname");
+            Assert.That(testDnsResolver.CallCount, Is.EqualTo(1));
         }
 
-        [TestCase(null)]
-        [TestCase("")]
-        [TestCase("non-exists")]
-        [TestCase("graphite-test")]
-        public void Resolve_SecondResolveSameHostname_SameResults(string hostname)
+        [Test]
+        public void Resolve_SecondResolveSameHostname_SameResults()
         {
-            var sut = new HostnameResolverWithCache(TimeSpan.FromMinutes(1));
-            var result1 = sut.Resolve(hostname);
-            var result2 = sut.Resolve(hostname);
+            var sut = new HostnameResolverWithCache(TimeSpan.FromMinutes(1), testDnsResolver);
+            var result1 = sut.Resolve("hostname");
+            var result2 = sut.Resolve("hostname");
             Assert.AreEqual(result1, result2);
         }
-
-        [TestCase(null, "non-exists")]
-        [TestCase("", "graphite-test")]
-        [TestCase("non-exists", null)]
-        [TestCase("graphite-test", "")]
-        public void Resolve_SecondResolveOtherHostname_NotUseCache(string hostname1, string hostname2)
+        
+        [Test]
+        public void Resolve_SecondResolveOtherHostname_NotUseCache()
         {
-            var sut = new HostnameResolverWithCache(TimeSpan.FromMinutes(1));
-            sut.Resolve(hostname1);
-            Assert.IsFalse(sut.LastResultFromCache);
-            sut.Resolve(hostname2);
-            Assert.IsFalse(sut.LastResultFromCache);
+            var sut = new HostnameResolverWithCache(TimeSpan.FromMinutes(1), testDnsResolver);
+            sut.Resolve("hostname1");
+            sut.Resolve("hostname2");
+            Assert.That(testDnsResolver.CallCount, Is.EqualTo(2));
         }
 
         [Test]
         public void Resove_SecondResolveWhenCacheDurationEnd_NotUseCache()
         {
-            var sut = new HostnameResolverWithCache(TimeSpan.FromSeconds(1));
-            sut.Resolve("graphite-test");
-            Assert.IsFalse(sut.LastResultFromCache);
-            sut.Resolve("graphite-test");
-            Assert.IsTrue(sut.LastResultFromCache);
+            var sut = new HostnameResolverWithCache(TimeSpan.FromSeconds(1), testDnsResolver);
+            sut.Resolve("hostname");
+            sut.Resolve("hostname");
 
             Thread.Sleep(1000);
-            sut.Resolve("graphite-test");
-            Assert.IsFalse(sut.LastResultFromCache);
+            sut.Resolve("hostname");
+            Assert.That(testDnsResolver.CallCount, Is.EqualTo(2));
         }
     }
 }
