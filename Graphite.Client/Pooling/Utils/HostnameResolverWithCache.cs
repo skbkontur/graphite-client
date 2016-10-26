@@ -1,20 +1,20 @@
 ﻿using System;
 using System.Linq;
-using System.Net;
 
 namespace SKBKontur.Graphite.Client.Pooling.Utils
 {
     public class HostnameResolverWithCache
     {
         private readonly TimeSpan cacheDuration;
+        private readonly IDnsResolver dnsResolver;
         private DateTime lastResolveTime;
         private string lastResolveResult;
         private string lastResolvedHostname;
-        public bool LastResultFromCache { get; private set; }
 
-        public HostnameResolverWithCache(TimeSpan cacheDuration)
+        public HostnameResolverWithCache(TimeSpan cacheDuration, IDnsResolver dnsResolver)
         {
             this.cacheDuration = cacheDuration;
+            this.dnsResolver = dnsResolver;
         }
 
         public string Resolve(string hostname)
@@ -32,7 +32,7 @@ namespace SKBKontur.Graphite.Client.Pooling.Utils
 
             try
             {
-                var ipAddress = Dns.GetHostAddresses(hostname).FirstOrDefault();
+                var ipAddress = dnsResolver.GetHostAddresses(hostname).FirstOrDefault();
                 lastResolveResult = ipAddress == null ? null : ipAddress.ToString();
             }
             catch
@@ -44,7 +44,7 @@ namespace SKBKontur.Graphite.Client.Pooling.Utils
 
         private bool CacheIsValid(string hostname)
         {
-            return LastResultFromCache = lastResolveTime.Add(cacheDuration) > DateTime.UtcNow && lastResolvedHostname == hostname;
+            return lastResolveTime.Add(cacheDuration) > DateTime.UtcNow && lastResolvedHostname == hostname;
         }
     }
 }

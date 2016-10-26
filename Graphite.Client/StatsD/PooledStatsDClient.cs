@@ -16,7 +16,7 @@ namespace SKBKontur.Graphite.Client.StatsD
     {
         public PooledStatsDClient([NotNull] IGraphiteTopology graphiteTopology)
         {
-            hostnameResolver = new HostnameResolverWithCache(TimeSpan.FromHours(1));
+            hostnameResolver = new HostnameResolverWithCache(TimeSpan.FromHours(1), new SimpleDnsResolver());
             pool = (graphiteTopology.Enabled && graphiteTopology.StatsD != null)
                        ? new Pool<StatsDClient>(x => new StatsDClient(hostnameResolver.Resolve(graphiteTopology.StatsD.Host), graphiteTopology.StatsD.Port))
                        : null;

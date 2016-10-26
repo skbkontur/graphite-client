@@ -38,7 +38,7 @@ namespace SKBKontur.Graphite.Client.Graphite
         {
             if (graphiteTopology.Graphite == null)
                 throw new ArgumentException("graphiteTopology.Graphite must be not null");
-            hostnameResolver = new HostnameResolverWithCache(TimeSpan.FromHours(1));
+            hostnameResolver = new HostnameResolverWithCache(TimeSpan.FromHours(1), new SimpleDnsResolver());
             switch(graphiteTopology.GraphiteProtocol)
             {
             case GraphiteProtocol.Tcp:

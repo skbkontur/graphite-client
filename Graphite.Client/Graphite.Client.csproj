@@ -54,6 +54,7 @@
     <Compile Include="Pooling\Utils\ObjectReferenceEqualityComparer.cs" />
     <Compile Include="Pooling\Pool.cs" />
     <Compile Include="Pooling\Exceptions\RemoveFromPoolFailedException.cs" />
+    <Compile Include="Pooling\Utils\SimpleDnsResolver.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Graphite\PooledGraphiteClient.cs" />
     <Compile Include="Properties\Annotations.cs" />
