@@ -52,9 +52,6 @@
     <Compile Include="TestGraphiteTopology.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\Graphite.Client\Graphite.Client.csproj">
       <Project>{fccbee89-0b3c-4046-baf3-a99b0d10b3f5}</Project>
       <Name>Graphite.Client</Name>
@@ -63,6 +60,9 @@
       <Project>{77eacc5c-76b2-4e73-a2c7-95747c980305}</Project>
       <Name>Graphite</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
