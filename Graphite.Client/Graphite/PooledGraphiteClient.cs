@@ -56,47 +56,57 @@ namespace SKBKontur.Graphite.Client.Graphite
         {
             if(udpPool != null)
             {
-                GraphiteUdpClient connection = null;
-                try
-                {
-                    connection = udpPool.Acquire();
-                    action(connection);
-                }
-                catch
-                {
-                    if(connection != null)
-                    {
-                        udpPool.Remove(connection);
-                        connection = null;
-                    }
-                }
-                finally
-                {
-                    if(connection != null)
-                        udpPool.Release(connection);
-                }
+                ExecuteWithPool(udpPool, action);
             }
             else if(tcpPool != null)
             {
-                GraphiteTcpClient connection = null;
-                try
+                ExecuteWithPool(tcpPool, action);
+            }
+        }
+
+        private void ExecuteWithPool<T>([NotNull] Pool<T> pool, [NotNull] Action<T> action)
+            where T : class, IDisposable
+        {
+            while (true)
+            {
+                var connection = TryAcquire(pool);
+                if (connection == null)
+                    break;
+
+                if (TryExecute(connection, action))
                 {
-                    connection = tcpPool.Acquire();
-                    action(connection);
+                    pool.Release(connection);
+                    break;
                 }
-                catch
-                {
-                    if(connection != null)
-                    {
-                        tcpPool.Remove(connection);
-                        connection = null;
-                    }
-                }
-                finally
-                {
-                    if(connection != null)
-                        tcpPool.Release(connection);
-                }
+
+                pool.Remove(connection);
+            }
+        }
+
+        [CanBeNull]
+        private T TryAcquire<T>([NotNull] Pool<T> pool)
+            where T : class, IDisposable
+        {
+            try
+            {
+                return pool.Acquire();
+            }
+            catch
+            {
+                return null;
+            }
+        }
+
+        private bool TryExecute<T>([NotNull] T connection, [NotNull] Action<T> action)
+        {
+            try
+            {
+                action(connection);
+                return true;
+            }
+            catch
+            {
+                return false;
             }
         }
 
