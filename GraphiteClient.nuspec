@@ -9,9 +9,6 @@
 	  <authors>Eugeny Tikhonov</authors>
 	  <description>GraphiteClient with pooling and ready to use with GroboContainer</description>
     <copyright>Copyright 2014-2015</copyright>
-	<dependencies>
-      <dependency id="Newtonsoft.Json" version="9.0.1" />
-    </dependencies>
   </metadata>
 <files>
   <file src="Output\SKBKontur.Graphite.Client.xml" target="lib\net40\" />

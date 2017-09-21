@@ -37,14 +37,9 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Net.Http" />
-    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AnnotationsBodyBuilderTests.cs" />
     <Compile Include="ConnectionTests.cs" />
     <Compile Include="HostnameResolverTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -55,10 +50,6 @@
     <ProjectReference Include="..\Graphite.Client\Graphite.Client.csproj">
       <Project>{fccbee89-0b3c-4046-baf3-a99b0d10b3f5}</Project>
       <Name>Graphite.Client</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Graphite.NET\Graphite\Graphite.csproj">
-      <Project>{77eacc5c-76b2-4e73-a2c7-95747c980305}</Project>
-      <Name>Graphite</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

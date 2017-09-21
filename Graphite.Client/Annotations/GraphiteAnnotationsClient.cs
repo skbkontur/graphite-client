@@ -1,11 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Net.Http;
 using System.Text;
 
 using JetBrains.Annotations;
-
-using Newtonsoft.Json;
 
 using SKBKontur.Graphite.Client.Settings;
 
@@ -14,9 +11,11 @@ namespace SKBKontur.Graphite.Client.Annotations
     [PublicAPI]
     public class GraphiteAnnotationsClient : IGraphiteAnnotationsClient
     {
+        private readonly IGraphiteTopology graphiteTopology;
+
         public GraphiteAnnotationsClient(
             [NotNull] IGraphiteTopology graphiteTopology
-            )
+        )
         {
             this.graphiteTopology = graphiteTopology;
         }
@@ -41,7 +40,7 @@ namespace SKBKontur.Graphite.Client.Annotations
 
             var annotationBody = CreateBody(title, tags ?? new string[0], utcTimestamp);
             HttpResponseMessage result;
-            using (var client = new HttpClient())
+            using(var client = new HttpClient())
             {
                 var httpContent = new StringContent(annotationBody, Encoding.UTF8, "application/json");
                 var response = client.PostAsync(graphiteTopology.AnnotationsUrl, httpContent);
@@ -89,16 +88,7 @@ namespace SKBKontur.Graphite.Client.Annotations
         [NotNull]
         private string CreateBody([NotNull] string title, [CanBeNull] string[] tags, long utcTimestamp)
         {
-            var descriptionDict = new Dictionary<string, object>
-            {
-                {"@timestamp", utcTimestamp},
-                {"desc", title},
-                {"tags",  string.Join(",", tags ?? new string[0])}
-            };
-            var descriptionJson = JsonConvert.SerializeObject(descriptionDict);
-            return descriptionJson;
+            return AnnotationsBodyBuilder.BuildBody(title, tags, utcTimestamp);
         }
-
-        private readonly IGraphiteTopology graphiteTopology;
     }
 }
