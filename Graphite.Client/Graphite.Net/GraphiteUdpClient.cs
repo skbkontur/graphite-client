@@ -1,7 +1,7 @@
 using System;
 using System.Net.Sockets;
 
-namespace SKBKontur.Graphite.Client.Graphite.Net
+namespace SkbKontur.Graphite.Client.Graphite.Net
 {
     internal class GraphiteUdpClient : IGraphiteClient, IDisposable
     {

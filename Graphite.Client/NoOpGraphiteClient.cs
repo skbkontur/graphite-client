@@ -2,7 +2,7 @@ using System;
 
 using JetBrains.Annotations;
 
-namespace SKBKontur.Graphite.Client
+namespace SkbKontur.Graphite.Client
 {
     [PublicAPI]
     public class NoOpGraphiteClient : IGraphiteClient

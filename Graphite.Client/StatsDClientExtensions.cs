@@ -3,7 +3,7 @@ using System.Diagnostics;
 
 using JetBrains.Annotations;
 
-namespace SKBKontur.Graphite.Client
+namespace SkbKontur.Graphite.Client
 {
     [PublicAPI]
     public static class StatsDClientExtensions

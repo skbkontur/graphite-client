@@ -1,6 +1,6 @@
 using System;
 
-namespace SKBKontur.Graphite.Client.Graphite.Net
+namespace SkbKontur.Graphite.Client.Graphite.Net
 {
     internal interface IGraphiteClient
     {

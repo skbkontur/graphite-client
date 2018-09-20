@@ -4,7 +4,7 @@ using System.Net;
 
 using NUnit.Framework;
 
-using SKBKontur.Graphite.Client;
+using SkbKontur.Graphite.Client;
 
 namespace Graphite.Client.Tests
 {

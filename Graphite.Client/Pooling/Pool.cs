@@ -6,10 +6,10 @@ using System.Threading;
 
 using JetBrains.Annotations;
 
-using SKBKontur.Graphite.Client.Pooling.Exceptions;
-using SKBKontur.Graphite.Client.Pooling.Utils;
+using SkbKontur.Graphite.Client.Pooling.Exceptions;
+using SkbKontur.Graphite.Client.Pooling.Utils;
 
-namespace SKBKontur.Graphite.Client.Pooling
+namespace SkbKontur.Graphite.Client.Pooling
 {
     internal class Pool<T> : IDisposable where T : class, IDisposable
     {

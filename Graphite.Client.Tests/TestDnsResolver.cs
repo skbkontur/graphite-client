@@ -1,7 +1,7 @@
-﻿using System.Net;
+using System.Net;
 using System.Net.Sockets;
 
-using SKBKontur.Graphite.Client.Pooling.Utils;
+using SkbKontur.Graphite.Client.Pooling.Utils;
 
 namespace Graphite.Client.Tests
 {

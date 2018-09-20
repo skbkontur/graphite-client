@@ -1,7 +1,7 @@
 using System;
 using System.Linq;
 
-namespace SKBKontur.Graphite.Client.Pooling.Utils
+namespace SkbKontur.Graphite.Client.Pooling.Utils
 {
     internal class HostnameResolverWithCache
     {

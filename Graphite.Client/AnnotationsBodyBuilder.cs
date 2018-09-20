@@ -3,7 +3,7 @@ using System.Text;
 
 using JetBrains.Annotations;
 
-namespace SKBKontur.Graphite.Client
+namespace SkbKontur.Graphite.Client
 {
     internal static class AnnotationsBodyBuilder
     {

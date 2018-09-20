@@ -1,6 +1,6 @@
 ﻿using System.Net;
 
-namespace SKBKontur.Graphite.Client.Pooling.Utils
+namespace SkbKontur.Graphite.Client.Pooling.Utils
 {
     internal interface IDnsResolver
     {

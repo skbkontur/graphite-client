@@ -2,7 +2,7 @@ using System;
 
 using JetBrains.Annotations;
 
-namespace SKBKontur.Graphite.Client
+namespace SkbKontur.Graphite.Client
 {
     /// <summary>
     ///     Интерфейс, позволяющий отправлять точки в StatsD backend

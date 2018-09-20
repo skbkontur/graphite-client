@@ -1,7 +1,7 @@
 using System;
 using System.Text;
 
-namespace SKBKontur.Graphite.Client.Graphite.Net
+namespace SkbKontur.Graphite.Client.Graphite.Net
 {
     internal class PlaintextMessage
     {

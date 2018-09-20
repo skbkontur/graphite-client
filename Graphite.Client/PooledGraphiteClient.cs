@@ -2,11 +2,11 @@ using System;
 
 using JetBrains.Annotations;
 
-using SKBKontur.Graphite.Client.Graphite.Net;
-using SKBKontur.Graphite.Client.Pooling;
-using SKBKontur.Graphite.Client.Pooling.Utils;
+using SkbKontur.Graphite.Client.Graphite.Net;
+using SkbKontur.Graphite.Client.Pooling;
+using SkbKontur.Graphite.Client.Pooling.Utils;
 
-namespace SKBKontur.Graphite.Client
+namespace SkbKontur.Graphite.Client
 {
     [PublicAPI]
     public class PooledGraphiteClient : IGraphiteClient, IDisposable

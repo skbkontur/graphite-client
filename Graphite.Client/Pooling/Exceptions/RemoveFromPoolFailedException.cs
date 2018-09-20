@@ -2,7 +2,7 @@ using System;
 
 using JetBrains.Annotations;
 
-namespace SKBKontur.Graphite.Client.Pooling.Exceptions
+namespace SkbKontur.Graphite.Client.Pooling.Exceptions
 {
     internal class RemoveFromPoolFailedException : Exception
     {

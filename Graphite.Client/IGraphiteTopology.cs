@@ -2,7 +2,7 @@ using System.Net;
 
 using JetBrains.Annotations;
 
-namespace SKBKontur.Graphite.Client
+namespace SkbKontur.Graphite.Client
 {
     [PublicAPI]
     public interface IGraphiteTopology

@@ -3,7 +3,7 @@ using System.Runtime.CompilerServices;
 
 using JetBrains.Annotations;
 
-namespace SKBKontur.Graphite.Client.Pooling.Utils
+namespace SkbKontur.Graphite.Client.Pooling.Utils
 {
     internal class ObjectReferenceEqualityComparer<T> : EqualityComparer<T> where T : class
     {

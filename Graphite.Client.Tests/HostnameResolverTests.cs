@@ -1,9 +1,9 @@
-﻿using System;
+using System;
 using System.Threading;
 
 using NUnit.Framework;
 
-using SKBKontur.Graphite.Client.Pooling.Utils;
+using SkbKontur.Graphite.Client.Pooling.Utils;
 
 namespace Graphite.Client.Tests
 {

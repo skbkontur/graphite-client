@@ -3,7 +3,7 @@ using System.Net.Http;
 
 using JetBrains.Annotations;
 
-namespace SKBKontur.Graphite.Client
+namespace SkbKontur.Graphite.Client
 {
     /// <summary>
     ///     Интерфейс, позволяющий отправлять аннотации
