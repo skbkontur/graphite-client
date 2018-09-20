@@ -5,13 +5,9 @@ namespace SKBKontur.Graphite.Client.Graphite.Net
 {
     internal class PlaintextMessage
     {
-        public string Path { get; private set; }
-        public long Value { get; private set; }
-        public long Timestamp { get; private set; }
-
         public PlaintextMessage(string path, long value, DateTime timestamp)
         {
-            if(path == null)
+            if (path == null)
             {
                 throw new ArgumentNullException("path");
             }
@@ -20,6 +16,10 @@ namespace SKBKontur.Graphite.Client.Graphite.Net
             Value = value;
             Timestamp = timestamp.ToUnixTime();
         }
+
+        public string Path { get; private set; }
+        public long Value { get; private set; }
+        public long Timestamp { get; private set; }
 
         public byte[] ToByteArray()
         {

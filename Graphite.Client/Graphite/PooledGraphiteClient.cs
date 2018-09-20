@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 
 using JetBrains.Annotations;
 
@@ -16,15 +16,15 @@ namespace SKBKontur.Graphite.Client.Graphite
             [NotNull] IGraphiteTopology graphiteTopology
             )
         {
-            if(graphiteTopology.Enabled && graphiteTopology.Graphite != null)
+            if (graphiteTopology.Enabled && graphiteTopology.Graphite != null)
                 InitializePool(graphiteTopology);
         }
 
         public void Dispose()
         {
-            if(udpPool != null)
+            if (udpPool != null)
                 udpPool.Dispose();
-            else if(tcpPool != null)
+            else if (tcpPool != null)
                 tcpPool.Dispose();
         }
 
@@ -38,7 +38,7 @@ namespace SKBKontur.Graphite.Client.Graphite
             if (graphiteTopology.Graphite == null)
                 throw new ArgumentException("graphiteTopology.Graphite must be not null");
             hostnameResolver = new HostnameResolverWithCache(TimeSpan.FromHours(1), new SimpleDnsResolver());
-            switch(graphiteTopology.GraphiteProtocol)
+            switch (graphiteTopology.GraphiteProtocol)
             {
             case GraphiteProtocol.Tcp:
                 tcpPool = new Pool<GraphiteTcpClient>(x => new GraphiteTcpClient(hostnameResolver.Resolve(graphiteTopology.Graphite.Host), graphiteTopology.Graphite.Port));
@@ -53,11 +53,11 @@ namespace SKBKontur.Graphite.Client.Graphite
 
         private void Execute([NotNull] Action<Net.IGraphiteClient> action)
         {
-            if(udpPool != null)
+            if (udpPool != null)
             {
                 ExecuteWithPool(udpPool, action);
             }
-            else if(tcpPool != null)
+            else if (tcpPool != null)
             {
                 ExecuteWithPool(tcpPool, action);
             }

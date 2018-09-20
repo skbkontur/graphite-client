@@ -9,8 +9,6 @@ namespace Graphite.Client.Tests
 {
     public class HostnameResolverTests
     {
-        private TestDnsResolver testDnsResolver;
-
         [SetUp]
         public void SetUp()
         {
@@ -38,7 +36,7 @@ namespace Graphite.Client.Tests
             sut.Resolve(hostname);
             Assert.That(testDnsResolver.CallCount, Is.EqualTo(expectedCallCount));
         }
-        
+
         [Test]
         public void Resolve_SecondResolveSameHostname_UseCache()
         {
@@ -56,7 +54,7 @@ namespace Graphite.Client.Tests
             var result2 = sut.Resolve("hostname");
             Assert.AreEqual(result1, result2);
         }
-        
+
         [Test]
         public void Resolve_SecondResolveOtherHostname_NotUseCache()
         {
@@ -77,5 +75,7 @@ namespace Graphite.Client.Tests
             sut.Resolve("hostname");
             Assert.That(testDnsResolver.CallCount, Is.EqualTo(2));
         }
+
+        private TestDnsResolver testDnsResolver;
     }
 }

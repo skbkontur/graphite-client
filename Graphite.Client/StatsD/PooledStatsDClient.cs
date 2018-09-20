@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Linq;
 
 using JetBrains.Annotations;
@@ -31,13 +31,13 @@ namespace SKBKontur.Graphite.Client.StatsD
 
         public void Dispose()
         {
-            if(pool != null)
+            if (pool != null)
                 pool.Dispose();
         }
 
         public void Timing(long value, double sampleRate, params string[] keys)
         {
-            if(pool != null)
+            if (pool != null)
                 ExecuteAroundPool(x => x.Timing(value, sampleRate, PrependPrefixesTo(keys)));
             else if (innerClient != null)
                 innerClient.Timing(value, sampleRate, PrependPrefixesTo(keys));
@@ -45,7 +45,7 @@ namespace SKBKontur.Graphite.Client.StatsD
 
         public void Increment(int magnitude, double sampleRate, params string[] keys)
         {
-            if(pool != null)
+            if (pool != null)
                 ExecuteAroundPool(x => x.Increment(magnitude, sampleRate, PrependPrefixesTo(keys)));
             else if (innerClient != null)
                 innerClient.Increment(magnitude, sampleRate, PrependPrefixesTo(keys));
@@ -61,7 +61,7 @@ namespace SKBKontur.Graphite.Client.StatsD
 
         private void ExecuteAroundPool([NotNull] Action<StatsDClient> action)
         {
-            if(pool == null) 
+            if (pool == null)
                 return;
             StatsDClient plainStatsDClient = null;
             try
@@ -71,7 +71,7 @@ namespace SKBKontur.Graphite.Client.StatsD
             }
             catch
             {
-                if(plainStatsDClient != null)
+                if (plainStatsDClient != null)
                 {
                     pool.Remove(plainStatsDClient);
                     plainStatsDClient = null;
@@ -79,7 +79,7 @@ namespace SKBKontur.Graphite.Client.StatsD
             }
             finally
             {
-                if(plainStatsDClient != null)
+                if (plainStatsDClient != null)
                     pool.Release(plainStatsDClient);
             }
         }

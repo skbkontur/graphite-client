@@ -1,16 +1,10 @@
-using System;
+﻿using System;
 using System.Linq;
 
 namespace SKBKontur.Graphite.Client.Pooling.Utils
 {
     internal class HostnameResolverWithCache
     {
-        private readonly TimeSpan cacheDuration;
-        private readonly IDnsResolver dnsResolver;
-        private DateTime lastResolveTime;
-        private string lastResolveResult;
-        private string lastResolvedHostname;
-
         public HostnameResolverWithCache(TimeSpan cacheDuration, IDnsResolver dnsResolver)
         {
             this.cacheDuration = cacheDuration;
@@ -46,5 +40,11 @@ namespace SKBKontur.Graphite.Client.Pooling.Utils
         {
             return lastResolveTime.Add(cacheDuration) > DateTime.UtcNow && lastResolvedHostname == hostname;
         }
+
+        private readonly TimeSpan cacheDuration;
+        private readonly IDnsResolver dnsResolver;
+        private DateTime lastResolveTime;
+        private string lastResolveResult;
+        private string lastResolvedHostname;
     }
 }

@@ -14,17 +14,17 @@ namespace SKBKontur.Graphite.Client.Annotations
                                  utcTimestamp,
                                  title != null ? "\"" + EscapeStringForJson(title) + "\"" : "null",
                                  "\"" + EscapeStringForJson(string.Join(",", tags ?? new string[0])) + "\""
-            );
+                );
         }
 
         public static string EscapeStringForJson([NotNull] string value)
         {
             var result = new StringBuilder(value.Length + 4);
 
-            for(var i = 0; i < value.Length; i += 1)
+            for (var i = 0; i < value.Length; i += 1)
             {
                 var currentChar = value[i];
-                switch(currentChar)
+                switch (currentChar)
                 {
                 case '\\':
                 case '"':
@@ -51,7 +51,7 @@ namespace SKBKontur.Graphite.Client.Annotations
                     result.Append("\\r");
                     break;
                 default:
-                    if(currentChar < ' ')
+                    if (currentChar < ' ')
                     {
                         var t = "000" + String.Format("X", currentChar);
                         result.Append("\\u" + t.Substring(t.Length - 4));

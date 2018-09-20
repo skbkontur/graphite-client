@@ -53,7 +53,7 @@ namespace SKBKontur.Graphite.Client
         [NotNull]
         public static IStatsDClient WithScopes([NotNull] this IStatsDClient client, [CanBeNull] params string[] nextPrefixes)
         {
-            if(nextPrefixes == null || nextPrefixes.Length == 0)
+            if (nextPrefixes == null || nextPrefixes.Length == 0)
                 return client;
             return new PooledStatsDClient(client, nextPrefixes);
         }

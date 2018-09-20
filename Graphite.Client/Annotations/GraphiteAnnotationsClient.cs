@@ -11,11 +11,9 @@ namespace SKBKontur.Graphite.Client.Annotations
     [PublicAPI]
     public class GraphiteAnnotationsClient : IGraphiteAnnotationsClient
     {
-        private readonly IGraphiteTopology graphiteTopology;
-
         public GraphiteAnnotationsClient(
             [NotNull] IGraphiteTopology graphiteTopology
-        )
+            )
         {
             this.graphiteTopology = graphiteTopology;
         }
@@ -33,14 +31,14 @@ namespace SKBKontur.Graphite.Client.Annotations
 
         public HttpResponseMessage PostEvent(string title, string[] tags, long utcTimestamp)
         {
-            if(!graphiteTopology.Enabled || graphiteTopology.AnnotationsUrl == null)
+            if (!graphiteTopology.Enabled || graphiteTopology.AnnotationsUrl == null)
                 return null;
-            if(string.IsNullOrWhiteSpace(title))
+            if (string.IsNullOrWhiteSpace(title))
                 throw new ArgumentNullException("title", "Title must be filled");
 
             var annotationBody = CreateBody(title, tags ?? new string[0], utcTimestamp);
             HttpResponseMessage result;
-            using(var client = new HttpClient())
+            using (var client = new HttpClient())
             {
                 var httpContent = new StringContent(annotationBody, Encoding.UTF8, "application/json");
                 var response = client.PostAsync(graphiteTopology.AnnotationsUrl, httpContent);
@@ -53,9 +51,9 @@ namespace SKBKontur.Graphite.Client.Annotations
         private static string EscapeStringValue([NotNull] string value)
         {
             var output = new StringBuilder(value.Length);
-            foreach(var c in value)
+            foreach (var c in value)
             {
-                switch(c)
+                switch (c)
                 {
                 case '/':
                     output.AppendFormat("{0}{1}", '\\', '/');
@@ -90,5 +88,7 @@ namespace SKBKontur.Graphite.Client.Annotations
         {
             return AnnotationsBodyBuilder.BuildBody(title, tags, utcTimestamp);
         }
+
+        private readonly IGraphiteTopology graphiteTopology;
     }
 }

@@ -6,14 +6,10 @@ namespace SKBKontur.Graphite.Client.Graphite.Net
 {
     internal class StatsDClient : IDisposable
     {
-        private readonly string _keyPrefix;
-        private readonly UdpClient _client;
-        private readonly Random _random;
-
         public StatsDClient(string hostname, int port, string keyPrefix = null)
         {
             _keyPrefix = keyPrefix;
-            _client = new UdpClient { ExclusiveAddressUse = false };
+            _client = new UdpClient {ExclusiveAddressUse = false};
             _client.Connect(hostname, port);
             _random = new Random();
         }
@@ -32,7 +28,7 @@ namespace SKBKontur.Graphite.Client.Graphite.Net
         {
             var stats = new string[keys.Length];
 
-            for(var i = 0; i < keys.Length; i++)
+            for (var i = 0; i < keys.Length; i++)
                 stats[i] = string.Format("{0}:{1}|ms", keys[i], value);
 
             return MaybeSend(sampleRate, stats);
@@ -86,7 +82,7 @@ namespace SKBKontur.Graphite.Client.Graphite.Net
         private bool MaybeSend(double sampleRate, params string[] stats)
         {
             // only return true if we sent something
-            var retval = false; 
+            var retval = false;
 
             if (sampleRate < 1.0)
             {
@@ -95,7 +91,7 @@ namespace SKBKontur.Graphite.Client.Graphite.Net
                     if (_random.NextDouble() <= sampleRate)
                     {
                         var sampledStat = string.Format("{0}|@{1}", stat, sampleRate);
-                        
+
                         if (Send(sampledStat))
                         {
                             retval = true;
@@ -119,7 +115,7 @@ namespace SKBKontur.Graphite.Client.Graphite.Net
 
         private bool Send(string message)
         {
-            if(!string.IsNullOrWhiteSpace(_keyPrefix))
+            if (!string.IsNullOrWhiteSpace(_keyPrefix))
             {
                 message = _keyPrefix + "." + message;
             }
@@ -127,9 +123,13 @@ namespace SKBKontur.Graphite.Client.Graphite.Net
             var data = Encoding.UTF8.GetBytes(message);
 
             _client.Send(data, data.Length);
-                
+
             return true;
         }
+
+        private readonly string _keyPrefix;
+        private readonly UdpClient _client;
+        private readonly Random _random;
 
         #region IDisposable
 

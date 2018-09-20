@@ -33,6 +33,5 @@ namespace SKBKontur.Graphite.Client
         /// <param name="tags">Тэги аннотации</param>
         /// <param name="utcDateTime">Время по UTC</param>
         HttpResponseMessage PostEvent([NotNull] string title, [CanBeNull] string[] tags, DateTime utcDateTime);
-
     }
 }

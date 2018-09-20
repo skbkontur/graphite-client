@@ -22,7 +22,7 @@ namespace SKBKontur.Graphite.Client.Pooling
         public void Dispose()
         {
             var items = freeItems.Select(x => x.Item).Union(busyItems.Keys).ToArray();
-            foreach(var item in items)
+            foreach (var item in items)
                 item.Dispose();
         }
 
@@ -36,7 +36,7 @@ namespace SKBKontur.Graphite.Client.Pooling
         public void Release([NotNull] T item)
         {
             object dummy;
-            if(!busyItems.TryRemove(item, out dummy))
+            if (!busyItems.TryRemove(item, out dummy))
                 throw new FailedReleaseItemException(item.ToString());
 #pragma warning disable 420
             Interlocked.Decrement(ref busyItemCount);
@@ -54,9 +54,9 @@ namespace SKBKontur.Graphite.Client.Pooling
                 var now = DateTime.UtcNow;
                 FreeItemInfo item;
 
-                while(freeItems.TryPop(out item))
+                while (freeItems.TryPop(out item))
                 {
-                    if(now - item.IdleTime >= minIdleTimeSpan)
+                    if (now - item.IdleTime >= minIdleTimeSpan)
                     {
                         result++;
                         item.Item.Dispose();
@@ -64,7 +64,7 @@ namespace SKBKontur.Graphite.Client.Pooling
                     }
                     tempStack.Push(item);
                 }
-                while(tempStack.Count > 0)
+                while (tempStack.Count > 0)
                     freeItems.Push(tempStack.Pop());
                 return result;
             }
@@ -77,7 +77,7 @@ namespace SKBKontur.Graphite.Client.Pooling
         public void Remove([NotNull] T item)
         {
             object dummy;
-            if(!busyItems.TryRemove(item, out dummy))
+            if (!busyItems.TryRemove(item, out dummy))
                 throw new RemoveFromPoolFailedException("Cannot find item to remove in busy items. This item does not belong in this pool or in released state.");
 #pragma warning disable 420
             Interlocked.Decrement(ref busyItemCount);
@@ -90,9 +90,9 @@ namespace SKBKontur.Graphite.Client.Pooling
 
         private bool TryAcquireExists(out T result)
         {
-            while(TryPopFreeItem(out result))
+            while (TryPopFreeItem(out result))
             {
-                if(!IsAlive(result))
+                if (!IsAlive(result))
                 {
                     result.Dispose();
                     continue;
@@ -135,7 +135,7 @@ namespace SKBKontur.Graphite.Client.Pooling
 
         private void MarkItemAsBusy([NotNull] T result)
         {
-            if(!busyItems.TryAdd(result, new object()))
+            if (!busyItems.TryAdd(result, new object()))
                 throw new ItemInPoolCollisionException();
 #pragma warning disable 420
             Interlocked.Increment(ref busyItemCount);
@@ -159,6 +159,7 @@ namespace SKBKontur.Graphite.Client.Pooling
 
             [NotNull]
             public T Item { get; private set; }
+
             public DateTime IdleTime { get; private set; }
         }
     }

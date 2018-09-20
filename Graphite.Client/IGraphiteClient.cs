@@ -5,13 +5,13 @@ using JetBrains.Annotations;
 namespace SKBKontur.Graphite.Client
 {
     /// <summary>
-    /// Интерфейс, позволяющий отправлять точки напрямую в графит
+    ///     Интерфейс, позволяющий отправлять точки напрямую в графит
     /// </summary>
     [PublicAPI]
     public interface IGraphiteClient
     {
         /// <summary>
-        /// Отправка одной точки в графит
+        ///     Отправка одной точки в графит
         /// </summary>
         /// <param name="path">Имя метрики (например, MyProject.MyService.ProcessorTime)</param>
         /// <param name="value">Значение точки</param>

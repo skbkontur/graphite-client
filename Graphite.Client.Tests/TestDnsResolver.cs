@@ -7,8 +7,6 @@ namespace Graphite.Client.Tests
 {
     internal class TestDnsResolver : IDnsResolver
     {
-        private readonly string successHostname;
-
         public TestDnsResolver(string successHostname = null)
         {
             this.successHostname = successHostname;
@@ -20,10 +18,12 @@ namespace Graphite.Client.Tests
         {
             CallCount++;
 
-            if(string.IsNullOrEmpty(successHostname) || successHostname.Equals(hostNameOrAddress))
-                return new [] { IPAddress.Loopback };
+            if (string.IsNullOrEmpty(successHostname) || successHostname.Equals(hostNameOrAddress))
+                return new[] {IPAddress.Loopback};
 
             throw new SocketException((int)SocketError.HostNotFound);
         }
+
+        private readonly string successHostname;
     }
 }
