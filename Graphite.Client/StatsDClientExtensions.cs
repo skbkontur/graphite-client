@@ -3,8 +3,6 @@ using System.Diagnostics;
 
 using JetBrains.Annotations;
 
-using SKBKontur.Graphite.Client.StatsD;
-
 namespace SKBKontur.Graphite.Client
 {
     [PublicAPI]

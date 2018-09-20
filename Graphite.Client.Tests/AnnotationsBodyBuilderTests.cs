@@ -1,6 +1,6 @@
-﻿using NUnit.Framework;
+using NUnit.Framework;
 
-using SKBKontur.Graphite.Client.Annotations;
+using SKBKontur.Graphite.Client;
 
 namespace Graphite.Client.Tests
 {

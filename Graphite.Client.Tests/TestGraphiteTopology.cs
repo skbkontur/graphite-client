@@ -1,6 +1,6 @@
-﻿using System.Net;
+using System.Net;
 
-using SKBKontur.Graphite.Client.Settings;
+using SKBKontur.Graphite.Client;
 
 namespace Graphite.Client.Tests
 {

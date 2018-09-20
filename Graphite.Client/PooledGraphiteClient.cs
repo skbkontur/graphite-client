@@ -5,9 +5,8 @@ using JetBrains.Annotations;
 using SKBKontur.Graphite.Client.Graphite.Net;
 using SKBKontur.Graphite.Client.Pooling;
 using SKBKontur.Graphite.Client.Pooling.Utils;
-using SKBKontur.Graphite.Client.Settings;
 
-namespace SKBKontur.Graphite.Client.Graphite
+namespace SKBKontur.Graphite.Client
 {
     [PublicAPI]
     public class PooledGraphiteClient : IGraphiteClient, IDisposable
@@ -49,7 +48,7 @@ namespace SKBKontur.Graphite.Client.Graphite
             }
         }
 
-        private void Execute([NotNull] Action<Net.IGraphiteClient> action)
+        private void Execute([NotNull] Action<Graphite.Net.IGraphiteClient> action)
         {
             if (udpPool != null)
                 ExecuteWithPool(udpPool, action);

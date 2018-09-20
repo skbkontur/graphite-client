@@ -6,9 +6,8 @@ using JetBrains.Annotations;
 using SKBKontur.Graphite.Client.Graphite.Net;
 using SKBKontur.Graphite.Client.Pooling;
 using SKBKontur.Graphite.Client.Pooling.Utils;
-using SKBKontur.Graphite.Client.Settings;
 
-namespace SKBKontur.Graphite.Client.StatsD
+namespace SKBKontur.Graphite.Client
 {
     [PublicAPI]
     public class PooledStatsDClient : IStatsDClient

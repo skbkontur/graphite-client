@@ -4,9 +4,7 @@ using System.Text;
 
 using JetBrains.Annotations;
 
-using SKBKontur.Graphite.Client.Settings;
-
-namespace SKBKontur.Graphite.Client.Annotations
+namespace SKBKontur.Graphite.Client
 {
     [PublicAPI]
     public class GraphiteAnnotationsClient : IGraphiteAnnotationsClient
