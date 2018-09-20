@@ -5,51 +5,44 @@
 
 [Graphite](https://graphiteapp.org/) and [StatsD](https://github.com/etsy/statsd/) client library for .NET with connection pooling.
 
-## Graphite
-
-### Usage
+## Usage
 
 ```csharp
-// Import namespace
-using Graphite;
+using SkbKontur.Graphite.Client;
+
+// Implement configuration interface
+class GraphiteTopology : IGraphiteTopology
+{
+    public bool Enabled => true;
+    public GraphiteProtocol GraphiteProtocol => GraphiteProtocol.Tcp;
+    public DnsEndPoint Graphite => new DnsEndPoint("localhost", 2003);
+    public DnsEndPoint StatsD => new DnsEndPoint("localhost", 8125);
+    public string AnnotationsUrl => null;
+}
 
 // ...
 
-// Create an UDP client for sending metrics to "localhost:2003", prefixing all keys with "foo.bar"
-using(var client = new GraphiteUdpClient("localhost", 2003, "foo.bar"))
+// graphiteClient will use TCP protocol and localhost:2003 endpoint
+using (var graphiteClient = new PooledGraphiteClient(new GraphiteTopology()))
 {
     // Report a metric
-    client.Send("baz", 93284928374);
-
-    // Report a metric specifying timestamp
-    client.Send("baz", 93284928374, DateTime.Now.AddSeconds(42));
+    graphiteClient.Send("foo.bar.baz", 93284928374, DateTime.UtcNow);
 }
-```
 
-## StatsD
-
-### Usage
-
-```csharp
-// Import namespace
-using Graphite.StatsD;
-
-// ...
-
-// Create a client for sending metrics to "localhost:8125", prefixing all keys with "foo.bar"
-using(var client = new StatsDClient("localhost", 8125, "foo.bar"))
+// statsDClient will use UDP protocol and localhost:8125 endpoint
+using (var statsDClient = new PooledStatsDClient(new GraphiteTopology()))
 {
     // Increment a counter
-    client.Incremenet("counter1"); // sends 'foo.bar.counter1:1|c'
+    statsDClient.Increment("foo.bar.counter1"); // sends 'foo.bar.counter1:1|c'
 
     // Increment a counter by 42
-    client.Incremenet("counter2", 42); // sends 'foo.bar.counter2:42|c'
+    statsDClient.Increment("foo.bar.counter2", 42); // sends 'foo.bar.counter2:42|c'
 
     // Decrement a counter by 5, sampled every 1/10th time
-    client.Decrement("counter3", 5, 0.1); // sends 'foo.bar.counter3:-5|c@0.1
+    statsDClient.Decrement("foo.bar.counter3", -5, 0.1); // sends 'foo.bar.counter3:-5|c@0.1'
 
     // Report that the blahonga operation took 42 ms
-    client.Timing("blahonga", 42); // sends 'foo.bar.blahonga:42|ms'
+    statsDClient.Timing("foo.bar.blahonga", 42); // sends 'foo.bar.blahonga:42|ms'
 }
 ```
 
