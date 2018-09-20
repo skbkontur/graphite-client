@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 
 using JetBrains.Annotations;
@@ -16,7 +16,7 @@ namespace SKBKontur.Graphite.Client.StatsD
         public PooledStatsDClient([NotNull] IGraphiteTopology graphiteTopology)
         {
             hostnameResolver = new HostnameResolverWithCache(TimeSpan.FromHours(1), new SimpleDnsResolver());
-            pool = (graphiteTopology.Enabled && graphiteTopology.StatsD != null)
+            pool = graphiteTopology.Enabled && graphiteTopology.StatsD != null
                        ? new Pool<StatsDClient>(x => new StatsDClient(hostnameResolver.Resolve(graphiteTopology.StatsD.Host), graphiteTopology.StatsD.Port))
                        : null;
             prefixes = null;
@@ -31,24 +31,23 @@ namespace SKBKontur.Graphite.Client.StatsD
 
         public void Dispose()
         {
-            if (pool != null)
-                pool.Dispose();
+            pool?.Dispose();
         }
 
         public void Timing(long value, double sampleRate, params string[] keys)
         {
             if (pool != null)
                 ExecuteAroundPool(x => x.Timing(value, sampleRate, PrependPrefixesTo(keys)));
-            else if (innerClient != null)
-                innerClient.Timing(value, sampleRate, PrependPrefixesTo(keys));
+            else
+                innerClient?.Timing(value, sampleRate, PrependPrefixesTo(keys));
         }
 
         public void Increment(int magnitude, double sampleRate, params string[] keys)
         {
             if (pool != null)
                 ExecuteAroundPool(x => x.Increment(magnitude, sampleRate, PrependPrefixesTo(keys)));
-            else if (innerClient != null)
-                innerClient.Increment(magnitude, sampleRate, PrependPrefixesTo(keys));
+            else
+                innerClient?.Increment(magnitude, sampleRate, PrependPrefixesTo(keys));
         }
 
         [NotNull]
@@ -86,7 +85,6 @@ namespace SKBKontur.Graphite.Client.StatsD
 
         private readonly Pool<StatsDClient> pool;
         private readonly HostnameResolverWithCache hostnameResolver;
-
         private readonly IStatsDClient innerClient;
         private readonly string[] prefixes;
     }

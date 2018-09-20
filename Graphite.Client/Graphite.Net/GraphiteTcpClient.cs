@@ -44,10 +44,7 @@ namespace SKBKontur.Graphite.Client.Graphite.Net
         {
             if (!disposing) return;
 
-            if (tcpClient != null)
-            {
-                tcpClient.Close();
-            }
+            tcpClient?.Close();
         }
 
         #endregion

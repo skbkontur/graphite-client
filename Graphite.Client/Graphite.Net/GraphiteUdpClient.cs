@@ -44,10 +44,7 @@ namespace SKBKontur.Graphite.Client.Graphite.Net
         {
             if (!disposing) return;
 
-            if (udpClient != null)
-            {
-                udpClient.Close();
-            }
+            udpClient?.Close();
         }
 
         #endregion

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Net.Http;
 using System.Text;
 
@@ -11,9 +11,7 @@ namespace SKBKontur.Graphite.Client.Annotations
     [PublicAPI]
     public class GraphiteAnnotationsClient : IGraphiteAnnotationsClient
     {
-        public GraphiteAnnotationsClient(
-            [NotNull] IGraphiteTopology graphiteTopology
-            )
+        public GraphiteAnnotationsClient([NotNull] IGraphiteTopology graphiteTopology)
         {
             this.graphiteTopology = graphiteTopology;
         }

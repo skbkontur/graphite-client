@@ -12,9 +12,7 @@ namespace SKBKontur.Graphite.Client.Graphite
     [PublicAPI]
     public class PooledGraphiteClient : IGraphiteClient, IDisposable
     {
-        public PooledGraphiteClient(
-            [NotNull] IGraphiteTopology graphiteTopology
-            )
+        public PooledGraphiteClient([NotNull] IGraphiteTopology graphiteTopology)
         {
             if (graphiteTopology.Enabled && graphiteTopology.Graphite != null)
                 InitializePool(graphiteTopology);
@@ -24,8 +22,8 @@ namespace SKBKontur.Graphite.Client.Graphite
         {
             if (udpPool != null)
                 udpPool.Dispose();
-            else if (tcpPool != null)
-                tcpPool.Dispose();
+            else
+                tcpPool?.Dispose();
         }
 
         public void Send(string path, long value, DateTime timestamp)
@@ -54,13 +52,9 @@ namespace SKBKontur.Graphite.Client.Graphite
         private void Execute([NotNull] Action<Net.IGraphiteClient> action)
         {
             if (udpPool != null)
-            {
                 ExecuteWithPool(udpPool, action);
-            }
             else if (tcpPool != null)
-            {
                 ExecuteWithPool(tcpPool, action);
-            }
         }
 
         private void ExecuteWithPool<T>([NotNull] Pool<T> pool, [NotNull] Action<T> action)

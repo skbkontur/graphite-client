@@ -143,10 +143,7 @@ namespace SKBKontur.Graphite.Client.Graphite.Net
         {
             if (!disposing) return;
 
-            if (client != null)
-            {
-                client.Close();
-            }
+            client?.Close();
         }
 
         #endregion
