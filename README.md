@@ -3,7 +3,7 @@
 [![NuGet Status](https://img.shields.io/nuget/v/SkbKontur.Graphite.Client.svg)](https://www.nuget.org/packages/SkbKontur.Graphite.Client/)
 [![Build status](https://ci.appveyor.com/api/projects/status/9fek7h8sypqxrmx4?svg=true)](https://ci.appveyor.com/project/skbkontur/graphite-client)
 
-[Graphite](http://graphite.wikidot.com/)and [StatsD](https://github.com/etsy/statsd/) client library for .NET with connection pooling
+[Graphite](http://graphite.wikidot.com/) and [StatsD](https://github.com/etsy/statsd/) client library for .NET with connection pooling
 
 ## Graphite
 

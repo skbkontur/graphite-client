@@ -27,17 +27,17 @@ nuget:
 
 before_build:
   - cmd: dotnet --info
-  - cmd: dotnet restore ./Cassandra.ThriftClient.sln --verbosity minimal
+  - cmd: dotnet restore ./Graphite.Client.sln --verbosity minimal
 
 build_script:
-  - cmd: dotnet build --configuration Release ./Cassandra.ThriftClient.sln
-  - cmd: dotnet pack --no-build --configuration Release ./Cassandra.ThriftClient.sln
+  - cmd: dotnet build --configuration Release ./Graphite.Client.sln
+  - cmd: dotnet pack --no-build --configuration Release ./Graphite.Client.sln
 
 test_script:
-  - cmd: dotnet test --no-build --verbosity normal --configuration Release ./Cassandra.ThriftClient.Tests/Cassandra.ThriftClient.Tests.csproj
+  - cmd: dotnet test --no-build --verbosity normal --configuration Release ./Graphite.Client.Tests/Graphite.Client.Tests.csproj
 
 artifacts:
-  - path: './Cassandra.ThriftClient/bin/Release/*.nupkg'
+  - path: './Graphite.Client/bin/Release/*.nupkg'
 
 deploy:
   - provider: NuGet
