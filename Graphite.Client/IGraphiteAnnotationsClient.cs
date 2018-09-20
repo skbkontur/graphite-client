@@ -16,7 +16,8 @@ namespace SKBKontur.Graphite.Client
         /// </summary>
         /// <param name="title">Заголовок аннотации</param>
         /// <param name="tags">Тэги аннотации</param>
-        HttpResponseMessage PostEvent([NotNull] string title, [CanBeNull] string[] tags);
+        [CanBeNull]
+        HttpResponseMessage PostEvent([NotNull] string title, [CanBeNull, ItemNotNull] string[] tags);
 
         /// <summary>
         ///     Отправка аннотации
@@ -24,7 +25,8 @@ namespace SKBKontur.Graphite.Client
         /// <param name="title">Заголовок аннотации</param>
         /// <param name="tags">Тэги аннотации</param>
         /// <param name="utcTimestamp">Время по UTC в формате Epoch time</param>
-        HttpResponseMessage PostEvent([NotNull] string title, [CanBeNull] string[] tags, long utcTimestamp);
+        [CanBeNull]
+        HttpResponseMessage PostEvent([NotNull] string title, [CanBeNull, ItemNotNull] string[] tags, long utcTimestamp);
 
         /// <summary>
         ///     Отправка аннотации
@@ -32,6 +34,7 @@ namespace SKBKontur.Graphite.Client
         /// <param name="title">Заголовок аннотации</param>
         /// <param name="tags">Тэги аннотации</param>
         /// <param name="utcDateTime">UTC метка времени</param>
-        HttpResponseMessage PostEvent([NotNull] string title, [CanBeNull] string[] tags, DateTime utcDateTime);
+        [CanBeNull]
+        HttpResponseMessage PostEvent([NotNull] string title, [CanBeNull, ItemNotNull] string[] tags, DateTime utcDateTime);
     }
 }

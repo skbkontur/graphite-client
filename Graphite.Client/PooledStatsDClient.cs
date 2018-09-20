@@ -18,12 +18,14 @@ namespace SKBKontur.Graphite.Client
             pool = graphiteTopology.Enabled && graphiteTopology.StatsD != null
                        ? new Pool<StatsDClient>(x => new StatsDClient(hostnameResolver.Resolve(graphiteTopology.StatsD.Host), graphiteTopology.StatsD.Port))
                        : null;
-            prefixes = null;
             innerClient = null;
+            prefixes = null;
         }
 
-        public PooledStatsDClient([NotNull] IStatsDClient innerClient, [CanBeNull] string[] prefixes)
+        public PooledStatsDClient([NotNull] IStatsDClient innerClient, [CanBeNull, ItemNotNull] string[] prefixes)
         {
+            hostnameResolver = null;
+            pool = null;
             this.innerClient = innerClient;
             this.prefixes = prefixes;
         }
@@ -33,7 +35,7 @@ namespace SKBKontur.Graphite.Client
             pool?.Dispose();
         }
 
-        public void Timing(long value, double sampleRate, params string[] keys)
+        public void Timing(long value, double sampleRate, [NotNull, ItemNotNull] params string[] keys)
         {
             if (pool != null)
                 ExecuteAroundPool(x => x.Timing(value, sampleRate, PrependPrefixesTo(keys)));
@@ -41,7 +43,7 @@ namespace SKBKontur.Graphite.Client
                 innerClient?.Timing(value, sampleRate, PrependPrefixesTo(keys));
         }
 
-        public void Increment(int magnitude, double sampleRate, params string[] keys)
+        public void Increment(int magnitude, double sampleRate, [NotNull, ItemNotNull] params string[] keys)
         {
             if (pool != null)
                 ExecuteAroundPool(x => x.Increment(magnitude, sampleRate, PrependPrefixesTo(keys)));
@@ -49,8 +51,8 @@ namespace SKBKontur.Graphite.Client
                 innerClient?.Increment(magnitude, sampleRate, PrependPrefixesTo(keys));
         }
 
-        [NotNull]
-        private string[] PrependPrefixesTo([NotNull] string[] keys)
+        [NotNull, ItemNotNull]
+        private string[] PrependPrefixesTo([NotNull, ItemNotNull] string[] keys)
         {
             return prefixes == null || prefixes.Length == 0
                        ? keys

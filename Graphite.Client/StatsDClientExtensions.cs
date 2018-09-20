@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Diagnostics;
 
 using JetBrains.Annotations;
@@ -49,7 +49,7 @@ namespace SKBKontur.Graphite.Client
         }
 
         [NotNull]
-        public static IStatsDClient WithScopes([NotNull] this IStatsDClient client, [CanBeNull] params string[] nextPrefixes)
+        public static IStatsDClient WithScopes([NotNull] this IStatsDClient client, [CanBeNull, ItemNotNull] params string[] nextPrefixes)
         {
             if (nextPrefixes == null || nextPrefixes.Length == 0)
                 return client;

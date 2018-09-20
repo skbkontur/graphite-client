@@ -14,18 +14,21 @@ namespace SKBKontur.Graphite.Client
             this.graphiteTopology = graphiteTopology;
         }
 
-        public HttpResponseMessage PostEvent(string title, string[] tags)
+        [CanBeNull]
+        public HttpResponseMessage PostEvent([NotNull] string title, [CanBeNull, ItemNotNull] string[] tags)
         {
             return PostEvent(title, tags, DateTime.UtcNow);
         }
 
-        public HttpResponseMessage PostEvent(string title, string[] tags, DateTime utcDateTime)
+        [CanBeNull]
+        public HttpResponseMessage PostEvent([NotNull] string title, [CanBeNull, ItemNotNull] string[] tags, DateTime utcDateTime)
         {
             var utcTimestamp = GetEpochTime(utcDateTime);
             return PostEvent(title, tags, utcTimestamp);
         }
 
-        public HttpResponseMessage PostEvent(string title, string[] tags, long utcTimestamp)
+        [CanBeNull]
+        public HttpResponseMessage PostEvent([NotNull] string title, [CanBeNull, ItemNotNull] string[] tags, long utcTimestamp)
         {
             if (!graphiteTopology.Enabled || graphiteTopology.AnnotationsUrl == null)
                 return null;

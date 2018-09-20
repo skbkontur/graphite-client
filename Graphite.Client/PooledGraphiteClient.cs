@@ -25,7 +25,7 @@ namespace SKBKontur.Graphite.Client
                 tcpPool?.Dispose();
         }
 
-        public void Send(string path, long value, DateTime timestamp)
+        public void Send([NotNull] string path, long value, DateTime timestamp)
         {
             Execute(x => x.Send(path, value, timestamp));
         }

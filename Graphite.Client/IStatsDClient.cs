@@ -17,7 +17,7 @@ namespace SKBKontur.Graphite.Client
         /// <param name="value">Значение метрики</param>
         /// <param name="sampleRate">Вероятность отправки значения по сети</param>
         /// <param name="keys">Ключи, по которым будет учитывается метрика</param>
-        void Timing(long value, double sampleRate, [NotNull] params string[] keys);
+        void Timing(long value, double sampleRate, [NotNull, ItemNotNull] params string[] keys);
 
         /// <summary>
         ///     Метод для отправки счётчиков в StatsD.
@@ -26,6 +26,6 @@ namespace SKBKontur.Graphite.Client
         /// <param name="magnitude">Значение инкремента для счётчика. Может быть отрицательным</param>
         /// <param name="sampleRate">Вероятность отправки значения по сети</param>
         /// <param name="keys">Ключи, по которым будет учитывается метрика</param>
-        void Increment(int magnitude, double sampleRate, [NotNull] params string[] keys);
+        void Increment(int magnitude, double sampleRate, [NotNull, ItemNotNull] params string[] keys);
     }
 }

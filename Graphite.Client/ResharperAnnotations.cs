@@ -44,6 +44,26 @@ namespace JetBrains.Annotations
     }
 
     /// <summary>
+    /// Can be appplied to symbols of types derived from IEnumerable as well as to symbols of Task
+    /// and Lazy classes to indicate that the value of a collection item, of the Task.Result property
+    /// or of the Lazy.Value property can never be null.
+    /// </summary>
+    [AttributeUsage(
+        AttributeTargets.Method | AttributeTargets.Parameter | AttributeTargets.Property |
+        AttributeTargets.Delegate | AttributeTargets.Field)]
+    internal sealed class ItemNotNullAttribute : Attribute { }
+
+    /// <summary>
+    /// Can be appplied to symbols of types derived from IEnumerable as well as to symbols of Task
+    /// and Lazy classes to indicate that the value of a collection item, of the Task.Result property
+    /// or of the Lazy.Value property can be null.
+    /// </summary>
+    [AttributeUsage(
+        AttributeTargets.Method | AttributeTargets.Parameter | AttributeTargets.Property |
+        AttributeTargets.Delegate | AttributeTargets.Field)]
+    internal sealed class ItemCanBeNullAttribute : Attribute { }
+
+    /// <summary>
     ///     Indicates that the marked symbol is used implicitly
     ///     (e.g. via reflection, in external library), so this symbol
     ///     will not be marked as unused (as well as by other usage inspections)
