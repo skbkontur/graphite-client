@@ -1,17 +1,8 @@
 using System;
 
 #pragma warning disable 1591
-// ReSharper disable UnusedMember.Global
-// ReSharper disable UnusedParameter.Local
-// ReSharper disable MemberCanBePrivate.Global
-// ReSharper disable UnusedAutoPropertyAccessor.Global
-// ReSharper disable IntroduceOptionalParameters.Global
-// ReSharper disable MemberCanBeProtected.Global
-// ReSharper disable InconsistentNaming
 
-// ReSharper disable CheckNamespace
 namespace JetBrains.Annotations
-// ReSharper restore CheckNamespace
 {
     /// <summary>
     ///     Indicates that the value of the marked element could be <c>null</c> sometimes,
