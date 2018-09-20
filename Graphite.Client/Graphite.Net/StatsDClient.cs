@@ -8,15 +8,15 @@ namespace SKBKontur.Graphite.Client.Graphite.Net
     {
         public StatsDClient(string hostname, int port, string keyPrefix = null)
         {
-            _keyPrefix = keyPrefix;
-            _client = new UdpClient {ExclusiveAddressUse = false};
-            _client.Connect(hostname, port);
-            _random = new Random();
+            this.keyPrefix = keyPrefix;
+            client = new UdpClient {ExclusiveAddressUse = false};
+            client.Connect(hostname, port);
+            random = new Random();
         }
 
         public bool Timing(string key, long value, double sampleRate = 1.0)
         {
-            return MaybeSend(sampleRate, string.Format("{0}:{1}|ms", key, value));
+            return MaybeSend(sampleRate, $"{key}:{value}|ms");
         }
 
         public bool Timing(long value, params string[] keys)
@@ -29,7 +29,7 @@ namespace SKBKontur.Graphite.Client.Graphite.Net
             var stats = new string[keys.Length];
 
             for (var i = 0; i < keys.Length; i++)
-                stats[i] = string.Format("{0}:{1}|ms", keys[i], value);
+                stats[i] = $"{keys[i]}:{value}|ms";
 
             return MaybeSend(sampleRate, stats);
         }
@@ -59,7 +59,7 @@ namespace SKBKontur.Graphite.Client.Graphite.Net
 
         public bool Increment(string key, int magnitude = 1, double sampleRate = 1.0)
         {
-            var stat = string.Format("{0}:{1}|c", key, magnitude);
+            var stat = $"{key}:{magnitude}|c";
             return MaybeSend(stat, sampleRate);
         }
 
@@ -69,7 +69,7 @@ namespace SKBKontur.Graphite.Client.Graphite.Net
 
             for (var i = 0; i < keys.Length; i++)
             {
-                stats[i] = string.Format("{0}:{1}|c", keys[i], magnitude);
+                stats[i] = $"{keys[i]}:{magnitude}|c";
             }
             return MaybeSend(sampleRate, stats);
         }
@@ -88,9 +88,9 @@ namespace SKBKontur.Graphite.Client.Graphite.Net
             {
                 foreach (var stat in stats)
                 {
-                    if (_random.NextDouble() <= sampleRate)
+                    if (random.NextDouble() <= sampleRate)
                     {
-                        var sampledStat = string.Format("{0}|@{1}", stat, sampleRate);
+                        var sampledStat = $"{stat}|@{sampleRate}";
 
                         if (Send(sampledStat))
                         {
@@ -115,21 +115,21 @@ namespace SKBKontur.Graphite.Client.Graphite.Net
 
         private bool Send(string message)
         {
-            if (!string.IsNullOrWhiteSpace(_keyPrefix))
+            if (!string.IsNullOrWhiteSpace(keyPrefix))
             {
-                message = _keyPrefix + "." + message;
+                message = keyPrefix + "." + message;
             }
 
             var data = Encoding.UTF8.GetBytes(message);
 
-            _client.Send(data, data.Length);
+            client.Send(data, data.Length);
 
             return true;
         }
 
-        private readonly string _keyPrefix;
-        private readonly UdpClient _client;
-        private readonly Random _random;
+        private readonly string keyPrefix;
+        private readonly UdpClient client;
+        private readonly Random random;
 
         #region IDisposable
 
@@ -143,9 +143,9 @@ namespace SKBKontur.Graphite.Client.Graphite.Net
         {
             if (!disposing) return;
 
-            if (_client != null)
+            if (client != null)
             {
-                _client.Close();
+                client.Close();
             }
         }
 

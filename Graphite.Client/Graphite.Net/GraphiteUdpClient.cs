@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Net.Sockets;
 
 namespace SKBKontur.Graphite.Client.Graphite.Net
@@ -11,12 +11,12 @@ namespace SKBKontur.Graphite.Client.Graphite.Net
             Port = port;
             KeyPrefix = keyPrefix;
 
-            _udpClient = new UdpClient(Hostname, Port);
+            udpClient = new UdpClient(Hostname, Port);
         }
 
-        public string Hostname { get; private set; }
-        public int Port { get; private set; }
-        public string KeyPrefix { get; private set; }
+        public string Hostname { get; }
+        public int Port { get; }
+        public string KeyPrefix { get; }
 
         public void Send(string path, long value, DateTime timeStamp)
         {
@@ -27,10 +27,10 @@ namespace SKBKontur.Graphite.Client.Graphite.Net
 
             var message = new PlaintextMessage(path, value, timeStamp).ToByteArray();
 
-            _udpClient.Send(message, message.Length);
+            udpClient.Send(message, message.Length);
         }
 
-        private readonly UdpClient _udpClient;
+        private readonly UdpClient udpClient;
 
         #region IDisposable
 
@@ -44,9 +44,9 @@ namespace SKBKontur.Graphite.Client.Graphite.Net
         {
             if (!disposing) return;
 
-            if (_udpClient != null)
+            if (udpClient != null)
             {
-                _udpClient.Close();
+                udpClient.Close();
             }
         }
 

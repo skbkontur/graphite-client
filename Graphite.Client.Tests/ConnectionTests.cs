@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Diagnostics;
 using System.Net;
 
@@ -29,7 +29,7 @@ namespace Graphite.Client.Tests
             sut.Timing(15, 1.0, "Test");
             var attempt2 = stopwatch.ElapsedMilliseconds;
 
-            Console.WriteLine(string.Format("Host: {0}\nt1: {1}\nt2: {2}", hostname, attempt1, attempt2));
+            Console.WriteLine($"Host: {hostname}\nt1: {attempt1}\nt2: {attempt2}");
         }
 
         [TestCase("non-exists", GraphiteProtocol.Tcp)]
@@ -53,7 +53,7 @@ namespace Graphite.Client.Tests
             sut.Send("Test", 10, DateTime.UtcNow);
             var attempt2 = stopwatch.ElapsedMilliseconds;
 
-            Console.WriteLine(string.Format("Host: {0}\nt1: {1}\nt2: {2}", hostname, attempt1, attempt2));
+            Console.WriteLine($"Host: {hostname}\nt1: {attempt1}\nt2: {attempt2}");
         }
     }
 }

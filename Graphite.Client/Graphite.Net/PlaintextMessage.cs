@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Text;
 
 namespace SKBKontur.Graphite.Client.Graphite.Net
@@ -7,23 +7,18 @@ namespace SKBKontur.Graphite.Client.Graphite.Net
     {
         public PlaintextMessage(string path, long value, DateTime timestamp)
         {
-            if (path == null)
-            {
-                throw new ArgumentNullException("path");
-            }
-
-            Path = path;
+            Path = path ?? throw new ArgumentNullException("path");
             Value = value;
             Timestamp = timestamp.ToUnixTime();
         }
 
-        public string Path { get; private set; }
-        public long Value { get; private set; }
-        public long Timestamp { get; private set; }
+        public string Path { get; }
+        public long Value { get; }
+        public long Timestamp { get; }
 
         public byte[] ToByteArray()
         {
-            var line = string.Format("{0} {1} {2}\n", Path, Value, Timestamp);
+            var line = $"{Path} {Value} {Timestamp}\n";
 
             return Encoding.UTF8.GetBytes(line);
         }

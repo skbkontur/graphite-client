@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 
 namespace SKBKontur.Graphite.Client.Pooling.Utils
@@ -27,7 +27,7 @@ namespace SKBKontur.Graphite.Client.Pooling.Utils
             try
             {
                 var ipAddress = dnsResolver.GetHostAddresses(hostname).FirstOrDefault();
-                lastResolveResult = ipAddress == null ? null : ipAddress.ToString();
+                lastResolveResult = ipAddress?.ToString();
             }
             catch
             {

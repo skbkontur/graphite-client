@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 
 using JetBrains.Annotations;
 
@@ -47,7 +47,7 @@ namespace SKBKontur.Graphite.Client.Graphite
                 udpPool = new Pool<GraphiteUdpClient>(x => new GraphiteUdpClient(hostnameResolver.Resolve(graphiteTopology.Graphite.Host), graphiteTopology.Graphite.Port));
                 break;
             default:
-                throw new Exception(string.Format("Unknown graphite protocol: {0}", graphiteTopology.GraphiteProtocol));
+                throw new Exception($"Unknown graphite protocol: {graphiteTopology.GraphiteProtocol}");
             }
         }
 

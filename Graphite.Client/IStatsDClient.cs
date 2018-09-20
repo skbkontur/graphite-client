@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 
 using JetBrains.Annotations;
 
@@ -23,7 +23,7 @@ namespace SKBKontur.Graphite.Client
         ///     Метод для отправки счётчиков в StatsD.
         ///     Отправляет сообщения вида key:value|c
         /// </summary>
-        /// <param name="magnitude">Значение инкремента для счётчикка. Может быть отричательным</param>
+        /// <param name="magnitude">Значение инкремента для счётчика. Может быть отрицательным</param>
         /// <param name="sampleRate">Вероятность отправки значения по сети</param>
         /// <param name="keys">Ключи, по которым будет учитывается метрика</param>
         void Increment(int magnitude, double sampleRate, [NotNull] params string[] keys);

@@ -5,17 +5,17 @@ using JetBrains.Annotations;
 namespace SKBKontur.Graphite.Client
 {
     /// <summary>
-    ///     Интерфейс, позволяющий отправлять точки напрямую в графит
+    ///     РРЅС‚РµСЂС„РµР№СЃ, РїРѕР·РІРѕР»СЏСЋС‰РёР№ РѕС‚РїСЂР°РІР»СЏС‚СЊ С‚РѕС‡РєРё РЅР°РїСЂСЏРјСѓСЋ РІ РіСЂР°С„РёС‚
     /// </summary>
     [PublicAPI]
     public interface IGraphiteClient
     {
         /// <summary>
-        ///     Отправка одной точки в графит
+        ///     РћС‚РїСЂР°РІРєР° РѕРґРЅРѕР№ С‚РѕС‡РєРё РІ РіСЂР°С„РёС‚
         /// </summary>
-        /// <param name="path">Имя метрики (например, MyProject.MyService.ProcessorTime)</param>
-        /// <param name="value">Значение точки</param>
-        /// <param name="timestamp">Время точки, всегда будет сконвертировано в UTC и отправлено в графит в виде unixtimstamp'а</param>
+        /// <param name="path">РРјСЏ РјРµС‚СЂРёРєРё (РЅР°РїСЂРёРјРµСЂ, MyProject.MyService.ProcessorTime)</param>
+        /// <param name="value">Р—РЅР°С‡РµРЅРёРµ С‚РѕС‡РєРё</param>
+        /// <param name="timestamp">Р’СЂРµРјСЏ С‚РѕС‡РєРё, РІСЃРµРіРґР° Р±СѓРґРµС‚ СЃРєРѕРЅРІРµСЂС‚РёСЂРѕРІР°РЅРѕ РІ UTC Рё РѕС‚РїСЂР°РІР»РµРЅРѕ РІ РіСЂР°С„РёС‚ РІ РІРёРґРµ unix-timestamp'Р°</param>
         void Send([NotNull] string path, long value, DateTime timestamp);
     }
 }

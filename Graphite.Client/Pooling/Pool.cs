@@ -29,8 +29,7 @@ namespace SKBKontur.Graphite.Client.Pooling
         [NotNull]
         public T Acquire()
         {
-            T result;
-            return TryAcquireExists(out result) ? result : AcquireNew();
+            return TryAcquireExists(out var result) ? result : AcquireNew();
         }
 
         public void Release([NotNull] T item)
@@ -84,9 +83,9 @@ namespace SKBKontur.Graphite.Client.Pooling
 #pragma warning restore 420
         }
 
-        public int TotalCount { get { return FreeItemCount + BusyItemCount; } }
-        public int FreeItemCount { get { return freeItems.Count; } }
-        public int BusyItemCount { get { return busyItemCount; } }
+        public int TotalCount => FreeItemCount + BusyItemCount;
+        public int FreeItemCount => freeItems.Count;
+        public int BusyItemCount => busyItemCount;
 
         private bool TryAcquireExists(out T result)
         {
@@ -158,9 +157,9 @@ namespace SKBKontur.Graphite.Client.Pooling
             }
 
             [NotNull]
-            public T Item { get; private set; }
+            public T Item { get; }
 
-            public DateTime IdleTime { get; private set; }
+            public DateTime IdleTime { get; }
         }
     }
 }

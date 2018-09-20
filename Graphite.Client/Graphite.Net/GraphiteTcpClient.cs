@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Net.Sockets;
 
 namespace SKBKontur.Graphite.Client.Graphite.Net
@@ -11,12 +11,12 @@ namespace SKBKontur.Graphite.Client.Graphite.Net
             Port = port;
             KeyPrefix = keyPrefix;
 
-            _tcpClient = new TcpClient(Hostname, Port);
+            tcpClient = new TcpClient(Hostname, Port);
         }
 
-        public string Hostname { get; private set; }
-        public int Port { get; private set; }
-        public string KeyPrefix { get; private set; }
+        public string Hostname { get; }
+        public int Port { get; }
+        public string KeyPrefix { get; }
 
         public void Send(string path, long value, DateTime timeStamp)
         {
@@ -27,10 +27,10 @@ namespace SKBKontur.Graphite.Client.Graphite.Net
 
             var message = new PlaintextMessage(path, value, timeStamp).ToByteArray();
 
-            _tcpClient.GetStream().Write(message, 0, message.Length);
+            tcpClient.GetStream().Write(message, 0, message.Length);
         }
 
-        private readonly TcpClient _tcpClient;
+        private readonly TcpClient tcpClient;
 
         #region IDisposable
 
@@ -44,9 +44,9 @@ namespace SKBKontur.Graphite.Client.Graphite.Net
         {
             if (!disposing) return;
 
-            if (_tcpClient != null)
+            if (tcpClient != null)
             {
-                _tcpClient.Close();
+                tcpClient.Close();
             }
         }
 

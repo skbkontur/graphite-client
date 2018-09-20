@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Text;
 
 using JetBrains.Annotations;
@@ -10,11 +10,7 @@ namespace SKBKontur.Graphite.Client.Annotations
         [NotNull]
         public static string BuildBody([NotNull] string title, [CanBeNull] string[] tags, long utcTimestamp)
         {
-            return string.Format(@"{{""@timestamp"":{0},""desc"":{1},""tags"":{2}}}",
-                                 utcTimestamp,
-                                 title != null ? "\"" + EscapeStringForJson(title) + "\"" : "null",
-                                 "\"" + EscapeStringForJson(string.Join(",", tags ?? new string[0])) + "\""
-                );
+            return $@"{{""@timestamp"":{utcTimestamp},""desc"":{(title != null ? "\"" + EscapeStringForJson(title) + "\"" : "null")},""tags"":{"\"" + EscapeStringForJson(string.Join(",", tags ?? new string[0])) + "\""}}}";
         }
 
         public static string EscapeStringForJson([NotNull] string value)

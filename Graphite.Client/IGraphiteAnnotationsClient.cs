@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Net.Http;
 
 using JetBrains.Annotations;
@@ -31,7 +31,7 @@ namespace SKBKontur.Graphite.Client
         /// </summary>
         /// <param name="title">Заголовок аннотации</param>
         /// <param name="tags">Тэги аннотации</param>
-        /// <param name="utcDateTime">Время по UTC</param>
+        /// <param name="utcDateTime">UTC метка времени</param>
         HttpResponseMessage PostEvent([NotNull] string title, [CanBeNull] string[] tags, DateTime utcDateTime);
     }
 }
