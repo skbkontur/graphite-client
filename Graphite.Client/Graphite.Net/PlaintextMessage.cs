@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Text;
 
-namespace Graphite
+namespace SKBKontur.Graphite.Client.Graphite.Net
 {
-    public class PlaintextMessage
+    internal class PlaintextMessage
     {
         public string Path { get; private set; }
         public long Value { get; private set; }

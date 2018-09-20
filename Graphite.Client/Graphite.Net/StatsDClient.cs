@@ -2,9 +2,9 @@ using System;
 using System.Net.Sockets;
 using System.Text;
 
-namespace Graphite.StatsD
+namespace SKBKontur.Graphite.Client.Graphite.Net
 {
-    public class StatsDClient : IDisposable
+    internal class StatsDClient : IDisposable
     {
         private readonly string _keyPrefix;
         private readonly UdpClient _client;

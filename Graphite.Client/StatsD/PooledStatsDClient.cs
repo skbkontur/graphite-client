@@ -1,10 +1,9 @@
-﻿using System;
+using System;
 using System.Linq;
-
-using Graphite.StatsD;
 
 using JetBrains.Annotations;
 
+using SKBKontur.Graphite.Client.Graphite.Net;
 using SKBKontur.Graphite.Client.Pooling;
 using SKBKontur.Graphite.Client.Pooling.Utils;
 using SKBKontur.Graphite.Client.Settings;

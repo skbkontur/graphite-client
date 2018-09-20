@@ -1,9 +1,8 @@
-﻿using System;
-
-using Graphite;
+using System;
 
 using JetBrains.Annotations;
 
+using SKBKontur.Graphite.Client.Graphite.Net;
 using SKBKontur.Graphite.Client.Pooling;
 using SKBKontur.Graphite.Client.Pooling.Utils;
 using SKBKontur.Graphite.Client.Settings;
@@ -52,7 +51,7 @@ namespace SKBKontur.Graphite.Client.Graphite
             }
         }
 
-        private void Execute([NotNull] Action<global::Graphite.IGraphiteClient> action)
+        private void Execute([NotNull] Action<Net.IGraphiteClient> action)
         {
             if(udpPool != null)
             {

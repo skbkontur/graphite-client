@@ -1,9 +1,9 @@
-﻿using System;
+using System;
 using System.Net.Sockets;
 
-namespace Graphite
+namespace SKBKontur.Graphite.Client.Graphite.Net
 {
-    public class GraphiteTcpClient : IGraphiteClient, IDisposable
+    internal class GraphiteTcpClient : IGraphiteClient, IDisposable
     {
         public string Hostname { get; private set; }
         public int Port { get; private set; }

@@ -1,8 +1,8 @@
 using System;
 
-namespace Graphite
+namespace SKBKontur.Graphite.Client.Graphite.Net
 {
-    public static class DateTimeExtensions
+    internal static class DateTimeExtensions
     {
         private static readonly DateTime EPOCH = new DateTime(1970, 1, 1, 0, 0, 0, 0).ToLocalTime().ToUniversalTime();
         

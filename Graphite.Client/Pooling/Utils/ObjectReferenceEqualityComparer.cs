@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 
 using JetBrains.Annotations;
@@ -18,8 +18,6 @@ namespace SKBKontur.Graphite.Client.Pooling.Utils
         }
 
         [NotNull]
-        public new static IEqualityComparer<T> Default { get { return defaultComparer; } }
-
-        private static readonly IEqualityComparer<T> defaultComparer = new ObjectReferenceEqualityComparer<T>();
+        public new static IEqualityComparer<T> Default { get; } = new ObjectReferenceEqualityComparer<T>();
     }
 }

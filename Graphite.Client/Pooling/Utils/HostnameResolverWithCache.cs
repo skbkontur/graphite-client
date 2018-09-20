@@ -1,9 +1,9 @@
-﻿using System;
+using System;
 using System.Linq;
 
 namespace SKBKontur.Graphite.Client.Pooling.Utils
 {
-    public class HostnameResolverWithCache
+    internal class HostnameResolverWithCache
     {
         private readonly TimeSpan cacheDuration;
         private readonly IDnsResolver dnsResolver;
