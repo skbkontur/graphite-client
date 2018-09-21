@@ -30,7 +30,7 @@ namespace Graphite.Client.Tests
         [TestCase(null, 0)]
         [TestCase("", 0)]
         [TestCase("notEmpty", 1)]
-        public void Resolve_UseResolverOnlyHostanameNotEmpty(string hostname, int expectedCallCount)
+        public void Resolve_UseResolverOnlyHostnameNotEmpty(string hostname, int expectedCallCount)
         {
             var sut = new HostnameResolverWithCache(TimeSpan.FromMinutes(1), testDnsResolver);
             sut.Resolve(hostname);
@@ -65,13 +65,13 @@ namespace Graphite.Client.Tests
         }
 
         [Test]
-        public void Resove_SecondResolveWhenCacheDurationEnd_NotUseCache()
+        public void Resolve_SecondResolveWhenCacheDurationEnd_NotUseCache()
         {
             var sut = new HostnameResolverWithCache(TimeSpan.FromSeconds(1), testDnsResolver);
             sut.Resolve("hostname");
             sut.Resolve("hostname");
 
-            Thread.Sleep(1000);
+            Thread.Sleep(TimeSpan.FromMilliseconds(1500));
             sut.Resolve("hostname");
             Assert.That(testDnsResolver.CallCount, Is.EqualTo(2));
         }

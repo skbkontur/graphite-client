@@ -13,7 +13,7 @@ namespace SkbKontur.Graphite.Client.Graphite.Net
             udpClient = new UdpClient(hostname, port);
         }
 
-        public void Send(string path, long value, DateTime timestamp)
+        public void Send([NotNull] string path, long value, DateTime timestamp)
         {
             if (!string.IsNullOrWhiteSpace(keyPrefix))
                 path = $"{keyPrefix}.{path}";

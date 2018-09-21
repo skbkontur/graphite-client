@@ -13,7 +13,7 @@ namespace SkbKontur.Graphite.Client.Graphite.Net
             tcpClient = new TcpClient(hostname, port);
         }
 
-        public void Send(string path, long value, DateTime timestamp)
+        public void Send([NotNull] string path, long value, DateTime timestamp)
         {
             if (!string.IsNullOrWhiteSpace(keyPrefix))
                 path = $"{keyPrefix}.{path}";

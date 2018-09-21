@@ -16,7 +16,7 @@ namespace SkbKontur.Graphite.Client.Graphite.Net
             random = new Random();
         }
 
-        public void Timing(long value, double sampleRate, params string[] keys)
+        public void Timing(long value, double sampleRate, [NotNull, ItemNotNull] params string[] keys)
         {
             var stats = new string[keys.Length];
             for (var i = 0; i < keys.Length; i++)
@@ -25,7 +25,7 @@ namespace SkbKontur.Graphite.Client.Graphite.Net
             MaybeSend(sampleRate, stats);
         }
 
-        public void Increment(int magnitude, double sampleRate, params string[] keys)
+        public void Increment(int magnitude, double sampleRate, [NotNull, ItemNotNull] params string[] keys)
         {
             var stats = new string[keys.Length];
             for (var i = 0; i < keys.Length; i++)
@@ -34,7 +34,7 @@ namespace SkbKontur.Graphite.Client.Graphite.Net
             MaybeSend(sampleRate, stats);
         }
 
-        private void MaybeSend(double sampleRate, params string[] stats)
+        private void MaybeSend(double sampleRate, [NotNull, ItemNotNull] params string[] stats)
         {
             if (sampleRate < 1.0)
             {
@@ -54,7 +54,7 @@ namespace SkbKontur.Graphite.Client.Graphite.Net
             }
         }
 
-        private void Send(string message)
+        private void Send([NotNull] string message)
         {
             if (!string.IsNullOrWhiteSpace(keyPrefix))
                 message = $"{keyPrefix}.{message}";
