@@ -4,11 +4,12 @@ using SkbKontur.Graphite.Client;
 
 namespace Graphite.Client.Tests
 {
-    internal class TestGraphiteTopology : IGraphiteTopology
+    internal class TestGraphiteClientSettings : IGraphiteClientSettings
     {
         public bool Enabled { get; set; }
-        public DnsEndPoint StatsD { get; set; }
-        public DnsEndPoint Graphite { get; set; }
+        public string GlobalPathPrefix { get; set; }
+        public DnsEndPoint StatsDEndPoint { get; set; }
+        public DnsEndPoint GraphiteEndPoint { get; set; }
         public GraphiteProtocol GraphiteProtocol { get; set; }
         public string AnnotationsUrl { get; set; }
     }

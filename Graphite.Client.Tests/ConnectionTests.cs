@@ -14,10 +14,10 @@ namespace Graphite.Client.Tests
         [TestCase("graphite-test")]
         public void TestStatsDConnection(string hostname)
         {
-            var topology = new TestGraphiteTopology
+            var topology = new TestGraphiteClientSettings
                 {
                     Enabled = true,
-                    StatsD = new DnsEndPoint(hostname, 8125)
+                    StatsDEndPoint = new DnsEndPoint(hostname, 8125)
                 };
             var sut = new PooledStatsDClient(topology);
             var stopwatch = Stopwatch.StartNew();
@@ -36,11 +36,11 @@ namespace Graphite.Client.Tests
         [TestCase("graphite-test", GraphiteProtocol.Udp)]
         public void TestGraphiteConnection(string hostname, GraphiteProtocol graphiteProtocol)
         {
-            var topology = new TestGraphiteTopology
+            var topology = new TestGraphiteClientSettings
                 {
                     Enabled = true,
-                    StatsD = new DnsEndPoint(hostname, 8125),
-                    Graphite = new DnsEndPoint(hostname, 2003),
+                    StatsDEndPoint = new DnsEndPoint(hostname, 8125),
+                    GraphiteEndPoint = new DnsEndPoint(hostname, 2003),
                     GraphiteProtocol = graphiteProtocol
                 };
             var sut = new PooledGraphiteClient(topology);

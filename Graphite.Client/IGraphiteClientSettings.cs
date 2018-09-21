@@ -5,15 +5,18 @@ using JetBrains.Annotations;
 namespace SkbKontur.Graphite.Client
 {
     [PublicAPI]
-    public interface IGraphiteTopology
+    public interface IGraphiteClientSettings
     {
         bool Enabled { get; }
 
         [CanBeNull]
-        DnsEndPoint StatsD { get; }
+        string GlobalPathPrefix { get; }
 
         [CanBeNull]
-        DnsEndPoint Graphite { get; }
+        DnsEndPoint StatsDEndPoint { get; }
+
+        [CanBeNull]
+        DnsEndPoint GraphiteEndPoint { get; }
 
         GraphiteProtocol GraphiteProtocol { get; }
 

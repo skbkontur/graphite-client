@@ -12,19 +12,20 @@ namespace SkbKontur.Graphite.Client
     [PublicAPI]
     public class PooledStatsDClient : IStatsDClient
     {
-        public PooledStatsDClient([NotNull] IGraphiteTopology graphiteTopology)
+        public PooledStatsDClient([NotNull] IGraphiteClientSettings graphiteClientSettings)
         {
-            hostnameResolver = new HostnameResolverWithCache(TimeSpan.FromHours(1), new SimpleDnsResolver());
-            pool = graphiteTopology.Enabled && graphiteTopology.StatsD != null
-                       ? new Pool<StatsDClient>(x => new StatsDClient(hostnameResolver.Resolve(graphiteTopology.StatsD.Host), graphiteTopology.StatsD.Port))
-                       : null;
+            pool = null;
             innerClient = null;
             prefixes = null;
+            if (graphiteClientSettings.Enabled && graphiteClientSettings.StatsDEndPoint != null)
+            {
+                var hostnameResolver = new HostnameResolverWithCache(TimeSpan.FromHours(1), new SimpleDnsResolver());
+                pool = new Pool<StatsDClient>(x => new StatsDClient(hostnameResolver.Resolve(graphiteClientSettings.StatsDEndPoint.Host), graphiteClientSettings.StatsDEndPoint.Port, graphiteClientSettings.GlobalPathPrefix));
+            }
         }
 
         public PooledStatsDClient([NotNull] IStatsDClient innerClient, [CanBeNull, ItemNotNull] string[] prefixes)
         {
-            hostnameResolver = null;
             pool = null;
             this.innerClient = innerClient;
             this.prefixes = prefixes;
@@ -85,7 +86,6 @@ namespace SkbKontur.Graphite.Client
         }
 
         private readonly Pool<StatsDClient> pool;
-        private readonly HostnameResolverWithCache hostnameResolver;
         private readonly IStatsDClient innerClient;
         private readonly string[] prefixes;
     }

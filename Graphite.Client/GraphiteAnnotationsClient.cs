@@ -9,9 +9,9 @@ namespace SkbKontur.Graphite.Client
     [PublicAPI]
     public class GraphiteAnnotationsClient : IGraphiteAnnotationsClient
     {
-        public GraphiteAnnotationsClient([NotNull] IGraphiteTopology graphiteTopology)
+        public GraphiteAnnotationsClient([NotNull] IGraphiteClientSettings graphiteClientSettings)
         {
-            this.graphiteTopology = graphiteTopology;
+            this.graphiteClientSettings = graphiteClientSettings;
         }
 
         [CanBeNull]
@@ -30,7 +30,7 @@ namespace SkbKontur.Graphite.Client
         [CanBeNull]
         public HttpResponseMessage PostEvent([NotNull] string title, [CanBeNull, ItemNotNull] string[] tags, long utcTimestamp)
         {
-            if (!graphiteTopology.Enabled || graphiteTopology.AnnotationsUrl == null)
+            if (!graphiteClientSettings.Enabled || graphiteClientSettings.AnnotationsUrl == null)
                 return null;
             if (string.IsNullOrWhiteSpace(title))
                 throw new ArgumentNullException("title", "Title must be filled");
@@ -40,7 +40,7 @@ namespace SkbKontur.Graphite.Client
             using (var client = new HttpClient())
             {
                 var httpContent = new StringContent(annotationBody, Encoding.UTF8, "application/json");
-                var response = client.PostAsync(graphiteTopology.AnnotationsUrl, httpContent);
+                var response = client.PostAsync(graphiteClientSettings.AnnotationsUrl, httpContent);
                 result = response.Result;
             }
             return result;
@@ -88,6 +88,6 @@ namespace SkbKontur.Graphite.Client
             return AnnotationsBodyBuilder.BuildBody(title, tags, utcTimestamp);
         }
 
-        private readonly IGraphiteTopology graphiteTopology;
+        private readonly IGraphiteClientSettings graphiteClientSettings;
     }
 }

@@ -1,4 +1,5 @@
 using System;
+using System.Net;
 
 using JetBrains.Annotations;
 
@@ -11,18 +12,16 @@ namespace SkbKontur.Graphite.Client
     [PublicAPI]
     public class PooledGraphiteClient : IGraphiteClient, IDisposable
     {
-        public PooledGraphiteClient([NotNull] IGraphiteTopology graphiteTopology)
+        public PooledGraphiteClient([NotNull] IGraphiteClientSettings graphiteClientSettings)
         {
-            if (graphiteTopology.Enabled && graphiteTopology.Graphite != null)
-                InitializePool(graphiteTopology);
+            if (graphiteClientSettings.Enabled && graphiteClientSettings.GraphiteEndPoint != null)
+                InitializePool(graphiteClientSettings.GraphiteEndPoint, graphiteClientSettings.GraphiteProtocol, graphiteClientSettings.GlobalPathPrefix);
         }
 
         public void Dispose()
         {
-            if (udpPool != null)
-                udpPool.Dispose();
-            else
-                tcpPool?.Dispose();
+            udpPool?.Dispose();
+            tcpPool?.Dispose();
         }
 
         public void Send([NotNull] string path, long value, DateTime timestamp)
@@ -30,21 +29,19 @@ namespace SkbKontur.Graphite.Client
             Execute(x => x.Send(path, value, timestamp));
         }
 
-        private void InitializePool([NotNull] IGraphiteTopology graphiteTopology)
+        private void InitializePool([NotNull] DnsEndPoint graphiteEndPoint, GraphiteProtocol graphiteProtocol, [CanBeNull] string globalPathPrefix)
         {
-            if (graphiteTopology.Graphite == null)
-                throw new ArgumentException("graphiteTopology.Graphite must be not null");
             hostnameResolver = new HostnameResolverWithCache(TimeSpan.FromHours(1), new SimpleDnsResolver());
-            switch (graphiteTopology.GraphiteProtocol)
+            switch (graphiteProtocol)
             {
             case GraphiteProtocol.Tcp:
-                tcpPool = new Pool<GraphiteTcpClient>(x => new GraphiteTcpClient(hostnameResolver.Resolve(graphiteTopology.Graphite.Host), graphiteTopology.Graphite.Port));
+                tcpPool = new Pool<GraphiteTcpClient>(x => new GraphiteTcpClient(hostnameResolver.Resolve(graphiteEndPoint.Host), graphiteEndPoint.Port, globalPathPrefix));
                 break;
             case GraphiteProtocol.Udp:
-                udpPool = new Pool<GraphiteUdpClient>(x => new GraphiteUdpClient(hostnameResolver.Resolve(graphiteTopology.Graphite.Host), graphiteTopology.Graphite.Port));
+                udpPool = new Pool<GraphiteUdpClient>(x => new GraphiteUdpClient(hostnameResolver.Resolve(graphiteEndPoint.Host), graphiteEndPoint.Port, globalPathPrefix));
                 break;
             default:
-                throw new Exception($"Unknown graphite protocol: {graphiteTopology.GraphiteProtocol}");
+                throw new ArgumentException($"Unknown graphite protocol: {graphiteProtocol}");
             }
         }
 

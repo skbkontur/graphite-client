@@ -1,35 +1,28 @@
 using System;
 using System.Net.Sockets;
 
+using JetBrains.Annotations;
+
 namespace SkbKontur.Graphite.Client.Graphite.Net
 {
     internal class GraphiteTcpClient : IGraphiteClient, IDisposable
     {
-        public GraphiteTcpClient(string hostname, int port = 2003, string keyPrefix = null)
+        public GraphiteTcpClient([NotNull] string hostname, int port, [CanBeNull] string keyPrefix)
         {
-            Hostname = hostname;
-            Port = port;
-            KeyPrefix = keyPrefix;
-
-            tcpClient = new TcpClient(Hostname, Port);
+            this.keyPrefix = keyPrefix;
+            tcpClient = new TcpClient(hostname, port);
         }
 
-        public string Hostname { get; }
-        public int Port { get; }
-        public string KeyPrefix { get; }
-
-        public void Send(string path, long value, DateTime timeStamp)
+        public void Send(string path, long value, DateTime timestamp)
         {
-            if (!string.IsNullOrWhiteSpace(KeyPrefix))
-            {
-                path = KeyPrefix + "." + path;
-            }
+            if (!string.IsNullOrWhiteSpace(keyPrefix))
+                path = $"{keyPrefix}.{path}";
 
-            var message = new PlaintextMessage(path, value, timeStamp).ToByteArray();
-
+            var message = new PlaintextMessage(path, value, timestamp).ToByteArray();
             tcpClient.GetStream().Write(message, 0, message.Length);
         }
 
+        private readonly string keyPrefix;
         private readonly TcpClient tcpClient;
 
         #region IDisposable
@@ -42,7 +35,8 @@ namespace SkbKontur.Graphite.Client.Graphite.Net
 
         protected virtual void Dispose(bool disposing)
         {
-            if (!disposing) return;
+            if (!disposing)
+                return;
 
             tcpClient?.Close();
         }

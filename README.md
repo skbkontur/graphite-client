@@ -11,9 +11,10 @@
 using SkbKontur.Graphite.Client;
 
 // Implement configuration interface
-class GraphiteTopology : IGraphiteTopology
+class GraphiteClientSettings : IGraphiteClientSettings
 {
     public bool Enabled => true;
+    public string GlobalPathPrefix => "foo.bar";
     public GraphiteProtocol GraphiteProtocol => GraphiteProtocol.Tcp;
     public DnsEndPoint Graphite => new DnsEndPoint("localhost", 2003);
     public DnsEndPoint StatsD => new DnsEndPoint("localhost", 8125);
@@ -23,26 +24,26 @@ class GraphiteTopology : IGraphiteTopology
 // ...
 
 // graphiteClient will use TCP protocol and localhost:2003 endpoint
-using (var graphiteClient = new PooledGraphiteClient(new GraphiteTopology()))
+using (var graphiteClient = new PooledGraphiteClient(new GraphiteClientSettings()))
 {
-    // Report a metric
-    graphiteClient.Send("foo.bar.baz", 93284928374, DateTime.UtcNow);
+    // Report a metric 'foo.bar.baz.qux'
+    graphiteClient.Send("baz.qux", 93284928374, DateTime.UtcNow);
 }
 
 // statsDClient will use UDP protocol and localhost:8125 endpoint
-using (var statsDClient = new PooledStatsDClient(new GraphiteTopology()))
+using (var statsDClient = new PooledStatsDClient(new GraphiteClientSettings()))
 {
     // Increment a counter
-    statsDClient.Increment("foo.bar.counter1"); // sends 'foo.bar.counter1:1|c'
+    statsDClient.Increment("counter1"); // sends 'foo.bar.counter1:1|c'
 
     // Increment a counter by 42
-    statsDClient.Increment("foo.bar.counter2", 42); // sends 'foo.bar.counter2:42|c'
+    statsDClient.Increment("counter2", 42); // sends 'foo.bar.counter2:42|c'
 
     // Decrement a counter by 5, sampled every 1/10th time
-    statsDClient.Decrement("foo.bar.counter3", -5, 0.1); // sends 'foo.bar.counter3:-5|c@0.1'
+    statsDClient.Decrement("counter3", -5, 0.1); // sends 'foo.bar.counter3:-5|c@0.1'
 
     // Report that the blahonga operation took 42 ms
-    statsDClient.Timing("foo.bar.blahonga", 42); // sends 'foo.bar.blahonga:42|ms'
+    statsDClient.Timing("mos.blahonga", 42); // sends 'foo.bar.mos.blahonga:42|ms'
 }
 ```
 

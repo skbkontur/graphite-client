@@ -1,35 +1,28 @@
 using System;
 using System.Net.Sockets;
 
+using JetBrains.Annotations;
+
 namespace SkbKontur.Graphite.Client.Graphite.Net
 {
     internal class GraphiteUdpClient : IGraphiteClient, IDisposable
     {
-        public GraphiteUdpClient(string hostname, int port = 2003, string keyPrefix = null)
+        public GraphiteUdpClient([NotNull] string hostname, int port, [CanBeNull] string keyPrefix)
         {
-            Hostname = hostname;
-            Port = port;
-            KeyPrefix = keyPrefix;
-
-            udpClient = new UdpClient(Hostname, Port);
+            this.keyPrefix = keyPrefix;
+            udpClient = new UdpClient(hostname, port);
         }
 
-        public string Hostname { get; }
-        public int Port { get; }
-        public string KeyPrefix { get; }
-
-        public void Send(string path, long value, DateTime timeStamp)
+        public void Send(string path, long value, DateTime timestamp)
         {
-            if (!string.IsNullOrWhiteSpace(KeyPrefix))
-            {
-                path = KeyPrefix + "." + path;
-            }
+            if (!string.IsNullOrWhiteSpace(keyPrefix))
+                path = $"{keyPrefix}.{path}";
 
-            var message = new PlaintextMessage(path, value, timeStamp).ToByteArray();
-
+            var message = new PlaintextMessage(path, value, timestamp).ToByteArray();
             udpClient.Send(message, message.Length);
         }
 
+        private readonly string keyPrefix;
         private readonly UdpClient udpClient;
 
         #region IDisposable
