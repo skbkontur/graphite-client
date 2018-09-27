@@ -1,6 +1,6 @@
 # Changelog
 
-## v1.3 - 2018.09.21
+## v1.3 - 2018.09.27
 - Add `NoOpGraphiteClient` and `NoOpStatsDClient` for DI-container integration convenience in cases 
   when you do not want any graphite or statsd reporting.
 - Add more `StatsDClient` extensions. Note breaking change in `Timing(..., Action f)` and `Timing(..., Func<T> f)` overloads. 
