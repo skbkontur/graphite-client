@@ -30,8 +30,9 @@ namespace SkbKontur.Graphite.Client
         [CanBeNull]
         public HttpResponseMessage PostEvent([NotNull] string title, [CanBeNull, ItemNotNull] string[] tags, long utcTimestamp)
         {
-            if (!graphiteClientSettings.Enabled || graphiteClientSettings.AnnotationsUrl == null)
+            if (!graphiteClientSettings.Enabled || string.IsNullOrWhiteSpace(graphiteClientSettings.AnnotationsUrl))
                 return null;
+
             if (string.IsNullOrWhiteSpace(title))
                 throw new ArgumentNullException("title", "Title must be filled");
 
